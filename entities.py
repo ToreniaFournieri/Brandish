@@ -14,45 +14,47 @@ class Player:
         self.previous_direction = self.direction
         dx, dy = 0, 0
 
-        if action == "W":  # Move forward
-            if self.direction == "N":
-                dx, dy = 0, -1
-            elif self.direction == "E":
-                dx, dy = 1, 0
-            elif self.direction == "S":
-                dx, dy = 0, 1
-            elif self.direction == "W":
-                dx, dy = -1, 0
+        if action == "W":
+            if self.direction == "N" and maze[y-1][x] != 1:
+                self.position = (x, y-1)
+            elif self.direction == "E" and maze[y][x+1] != 1:
+                self.position = (x+1, y)
+            elif self.direction == "S" and maze[y+1][x] != 1:
+                self.position = (x, y+1)
+            elif self.direction == "W" and maze[y][x-1] != 1:
+                self.position = (x-1, y)
 
-        elif action == "S":  # Move backward
-            if self.direction == "N":
-                dx, dy = 0, 1
-            elif self.direction == "E":
-                dx, dy = -1, 0
-            elif self.direction == "S":
-                dx, dy = 0, -1
-            elif self.direction == "W":
-                dx, dy = 1, 0
+        elif action == "S":
+            if self.direction == "N" and maze[y+1][x] != 1:
+                self.position = (x, y+1)
+            elif self.direction == "E" and maze[y][x-1] != 1:
+                self.position = (x-1, y)
+            elif self.direction == "S" and maze[y-1][x] != 1:
+                self.position = (x, y-1)
+            elif self.direction == "W" and maze[y][x+1] != 1:
+                self.position = (x+1, y)
 
-        elif action == "D":  # Move right
-            if self.direction == "N":
-                dx, dy = 1, 0
-            elif self.direction == "E":
-                dx, dy = 0, 1
-            elif self.direction == "S":
-                dx, dy = -1, 0
-            elif self.direction == "W":
-                dx, dy = 0, -1
+        elif action == "D":
+            if self.direction == "N" and maze[y][x+1] != 1:
+                self.position = (x+1, y)
+            elif self.direction == "E" and maze[y+1][x] != 1:
+                self.position = (x, y+1)
+            elif self.direction == "S" and maze[y][x-1] != 1:
+                self.position = (x-1, y)
+            elif self.direction == "W" and maze[y-1][x] != 1:
+                self.position = (x, y-1)
 
-        elif action == "A":  # Move left
-            if self.direction == "N":
-                dx, dy = -1, 0
-            elif self.direction == "E":
-                dx, dy = 0, -1
-            elif self.direction == "S":
-                dx, dy = 1, 0
-            elif self.direction == "W":
-                dx, dy = 0, 1
+        elif action == "A":
+            if self.direction == "N" and maze[y][x-1] != 1:
+                self.position = (x-1, y)
+            elif self.direction == "E" and maze[y-1][x] != 1:
+                self.position = (x, y-1)
+            elif self.direction == "S" and maze[y][x+1] != 1:
+                self.position = (x+1, y)
+            elif self.direction == "W" and maze[y+1][x] != 1:
+                self.position = (x, y+1)
+
+
         elif action == "Q":
             self.rotate_left()
         elif action == "E":
@@ -61,8 +63,8 @@ class Player:
             print("Invalid direction or there's a wall!")
 
         # If the movement is valid, update the player's position
-        if 0 <= x + dx < len(maze[0]) and 0 <= y + dy < len(maze) and maze[y + dy][x + dx] != 1:
-            self.position = (x + dx, y + dy)
+        #if 0 <= x + dx < len(maze[0]) and 0 <= y + dy < len(maze) and maze[y + dy][x + dx] != 1:
+        #    self.position = (x + dx, y + dy)
 
 
     def rotate_left(self):
