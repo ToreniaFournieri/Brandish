@@ -1,5 +1,6 @@
+from map import *
 from map_master import *
-from entities import Player
+from entities import *
 
 
 
