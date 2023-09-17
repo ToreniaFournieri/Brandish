@@ -27,6 +27,7 @@ def rotate_maze(maze, new_direction):
     elif new_direction == "E":
         return [list(row) for row in zip(*maze)]
 
+
 def get_rotated_position(position, new_direction, maze_width, maze_height):
     x, y = position
     if new_direction == "N":
