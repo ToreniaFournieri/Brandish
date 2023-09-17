@@ -28,7 +28,8 @@ def main():
 
     player = Player(start_position)
     while True:
-        relative_view = get_relative_view(maze, player.position, player.direction)
+        display_maze(maze, player.position)
+        relative_view = get_relative_view(maze, player)
         view_display = [''.join(["#" if cell == 1 else " " if cell == 0 else cell for cell in row]) for row in relative_view]
         
         # Display the player's relative view of the maze
@@ -36,10 +37,10 @@ def main():
         print()  # Add a newline for separation
 
         player.display_stats()
-        direction = input("Enter direction (W/A/S/D), Q to quit: ").upper()
-        if direction == "Q":
+        action = input("Enter direction (W/A/S/D), P to quit: ").upper()
+        if action == "P":
             break
-        player.move(direction, maze)
+        player.move(action, maze)
         
         # Check if the player has reached the end
         if maze[player.position[1]][player.position[0]] == "E":

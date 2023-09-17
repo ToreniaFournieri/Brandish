@@ -7,24 +7,78 @@ class Player:
         self.gold = 0
         self.position = start_position
         self.direction = "N"
+        self.previous_direction = "N"
 
-    def move(self, direction, maze):
+    def move(self, action, maze):
         x, y = self.position
-        if direction == "W" and maze[y-1][x] != 1:
-            self.position = (x, y-1)
-        elif direction == "S" and maze[y+1][x] != 1:
-            self.position = (x, y+1)
-        elif direction == "D" and maze[y][x+1] != 1:
-            self.position = (x+1, y)
-        elif direction == "A" and maze[y][x-1] != 1:
-            self.position = (x-1, y)
+        self.previous_direction = self.direction
+        dx, dy = 0, 0
+
+        if action == "W":  # Move forward
+            if self.direction == "N":
+                dx, dy = 0, -1
+            elif self.direction == "E":
+                dx, dy = 1, 0
+            elif self.direction == "S":
+                dx, dy = 0, 1
+            elif self.direction == "W":
+                dx, dy = -1, 0
+
+        elif action == "S":  # Move backward
+            if self.direction == "N":
+                dx, dy = 0, 1
+            elif self.direction == "E":
+                dx, dy = -1, 0
+            elif self.direction == "S":
+                dx, dy = 0, -1
+            elif self.direction == "W":
+                dx, dy = 1, 0
+
+        elif action == "D":  # Move right
+            if self.direction == "N":
+                dx, dy = 1, 0
+            elif self.direction == "E":
+                dx, dy = 0, 1
+            elif self.direction == "S":
+                dx, dy = -1, 0
+            elif self.direction == "W":
+                dx, dy = 0, -1
+
+        elif action == "A":  # Move left
+            if self.direction == "N":
+                dx, dy = -1, 0
+            elif self.direction == "E":
+                dx, dy = 0, -1
+            elif self.direction == "S":
+                dx, dy = 1, 0
+            elif self.direction == "W":
+                dx, dy = 0, 1
+        elif action == "Q":
+            self.rotate_left()
+        elif action == "E":
+            self.rotate_right()
         else:
             print("Invalid direction or there's a wall!")
+
+        # If the movement is valid, update the player's position
+        if 0 <= x + dx < len(maze[0]) and 0 <= y + dy < len(maze) and maze[y + dy][x + dx] != 1:
+            self.position = (x + dx, y + dy)
+
+
+    def rotate_left(self):
+        directions = ["N", "E", "S", "W"]
+        idx = directions.index(self.direction)
+        self.direction = directions[(idx - 1) % 4]
+
+    def rotate_right(self):
+        directions = ["N", "W", "S", "E"]
+        idx = directions.index(self.direction)
+        self.direction = directions[(idx - 1) % 4]
 
     def display_stats(self):
         print(f"Health: {self.health}")
         print(f"Attack Power: {self.attack_power}")
         print(f"Defense: {self.defense}")
         print(f"Gold: {self.gold}")
-        print(f"Position: {self.position}")
+        print(f"Position: {self.position} {self.direction} ({self.previous_direction})")
 
