@@ -3,19 +3,6 @@ import random
 E = '.'  # Empty cell
 W = '#'  # Wall cell
 
-# Test the function
-test_grid = [
-    [E, E, E, W, E, E, E, E],
-    [E, W, W, W, W, W, W, E],
-    [E, W, E, W, E, W, E, E],
-    [E, W, W, W, E, W, E, W],
-    [E, E, E, E, E, W, E, E],
-    [E, E, W, E, E, E, E, E],
-    [E, E, E, W, W, E, W, W],
-    [E, E, E, E, E, E, W, E]
-]
-
-
 
 def generate_random_grid(rows, cols, wall_probability=0.4):
     """Generate a random grid with given dimensions and wall probability."""
@@ -154,19 +141,3 @@ def generate_visual_2D_view(grid):
 
     return output
 
-
-'''
-# Test the function with the previous grid
-output_heavy = generate_visual_2D_view(test_grid)
-for row in output_heavy:
-    print(''.join(row))
-
-# Generate a 10x10 random grid
-test_grid_10x10 = generate_random_grid(10, 10)
-output2 = generate_visual_2D_view(test_grid_10x10)
-for row in test_grid_10x10:
-    print(''.join(row))
-
-for row in output2:
-    print(''.join(row))
-'''

@@ -1,5 +1,6 @@
 import random
 import os
+from visual_map import *
 
 def display_maze(maze, player_position):
     for y, row in enumerate(maze):
@@ -28,12 +29,13 @@ def rotate_maze(maze, new_direction):
         return [list(row) for row in zip(*maze)]
 
 
+
 def get_rotated_position(position, new_direction, maze_width, maze_height):
     x, y = position
     if new_direction == "N":
         return x, y
     elif new_direction == "E":
-        return y, maze_width - x - 1
+        return y, maze_width - x -2
     elif new_direction == "S":
         return maze_width - x - 1, maze_height - y - 1
     elif new_direction == "W":
@@ -62,6 +64,7 @@ def get_relative_view(maze, player):
     rotated_maze = rotate_maze(maze, player.direction)
     rotated_position = get_rotated_position(player.position, player.direction, len(maze[0]), len(maze))
     px, py = rotated_position
+
     
     # Define the vision limits
     up = 6
@@ -80,6 +83,8 @@ def get_relative_view(maze, player):
     
     # Place the player in the relative view
     view[up][left] = "P"
-    
+
+
+
     return view
 
