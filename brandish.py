@@ -31,11 +31,12 @@ def main():
         display_maze(maze, player.position)
         relative_view = get_relative_view(maze, player)
         view_display = [''.join(["#" if cell == 1 else " " if cell == 0 else cell for cell in row]) for row in relative_view]
-        
         # Display the player's relative view of the maze
-        print('\n'.join(view_display))
-        print()  # Add a newline for separation
+        visual_maze = generate_visual_2D_view(view_display)
+        for row in visual_maze:
+            print(''.join(map(str, row)))
 
+    
         player.display_stats()
         action = input("Enter direction (W/A/S/D), P to quit: ").upper()
         if action == "P":
