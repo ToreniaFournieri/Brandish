@@ -1,86 +1,72 @@
 # Player class and any other game entities
 class Player:
     def __init__(self, start_position):
-        self.health = 100
+        self.level = 1
+        self.health = 76
+        self.max_health = 100
+        self.mana = 32
+        self.max_mana = 100
         self.attack_power = 10
         self.defense = 5
         self.gold = 0
         self.position = start_position
-        self.direction = "N"
-        self.previous_direction = "N"
+        self.left_hand = "Shield"
+        self.armour = "Armour"
+        self.right_hand = "Short sowrd"
+        self.shortcut = "Potion"
+        self.left_ring = "None"
+        self.right_ring = "None"
 
     def move(self, action, maze):
         x, y = self.position
-        self.previous_direction = self.direction
         dx, dy = 0, 0
 
-        if action == "W":
-            if self.direction == "N" and maze[y-1][x] != 1:
-                self.position = (x, y-1)
-            elif self.direction == "E" and maze[y][x+1] != 1:
-                self.position = (x+1, y)
-            elif self.direction == "S" and maze[y+1][x] != 1:
-                self.position = (x, y+1)
-            elif self.direction == "W" and maze[y][x-1] != 1:
-                self.position = (x-1, y)
+        if action == "up" and maze[y-1][x] != 1:
+            self.position = (x, y-1)
 
-        elif action == "S":
-            if self.direction == "N" and maze[y+1][x] != 1:
-                self.position = (x, y+1)
-            elif self.direction == "E" and maze[y][x-1] != 1:
-                self.position = (x-1, y)
-            elif self.direction == "S" and maze[y-1][x] != 1:
-                self.position = (x, y-1)
-            elif self.direction == "W" and maze[y][x+1] != 1:
-                self.position = (x+1, y)
+        elif action == "down" and maze[y+1][x] != 1:
+            self.position = (x, y+1)
 
-        elif action == "D":
-            if self.direction == "N" and maze[y][x+1] != 1:
-                self.position = (x+1, y)
-            elif self.direction == "E" and maze[y+1][x] != 1:
-                self.position = (x, y+1)
-            elif self.direction == "S" and maze[y][x-1] != 1:
-                self.position = (x-1, y)
-            elif self.direction == "W" and maze[y-1][x] != 1:
-                self.position = (x, y-1)
+        elif action == "right" and maze[y][x+1] != 1:
+            self.position = (x+1, y)
 
-        elif action == "A":
-            if self.direction == "N" and maze[y][x-1] != 1:
-                self.position = (x-1, y)
-            elif self.direction == "E" and maze[y-1][x] != 1:
-                self.position = (x, y-1)
-            elif self.direction == "S" and maze[y][x+1] != 1:
-                self.position = (x+1, y)
-            elif self.direction == "W" and maze[y+1][x] != 1:
-                self.position = (x, y+1)
+        elif action == "left" and maze[y][x-1] != 1:
+            self.position = (x-1, y)
 
 
-        #elif action == "Q":
-        #    self.rotate_left()
-        #elif action == "E":
-        #    self.rotate_right()
         else:
             print("Invalid direction or there's a wall!")
 
-        # If the movement is valid, update the player's position
-        #if 0 <= x + dx < len(maze[0]) and 0 <= y + dy < len(maze) and maze[y + dy][x + dx] != 1:
-        #    self.position = (x + dx, y + dy)
+    
+    def generate_bar(self, current, max_value, bar_width=20):
+        ratio = current / max_value
+        filled_length = int(bar_width * ratio)
+        unfilled_length = bar_width - filled_length
+    
+        # Use Unicode block elements for a more graphical look
+        filled_portion = '█' * filled_length
+        unfilled_portion = '░' * unfilled_length
+    
+        return f"{filled_portion}{unfilled_portion}"
 
-
-    def rotate_left(self):
-        directions = ["N", "E", "S", "W"]
-        idx = directions.index(self.direction)
-        self.direction = directions[(idx - 1) % 4]
-
-    def rotate_right(self):
-        directions = ["N", "W", "S", "E"]
-        idx = directions.index(self.direction)
-        self.direction = directions[(idx - 1) % 4]
 
     def display_stats(self):
-        print(f"Health: {self.health}")
-        print(f"Attack Power: {self.attack_power}")
-        print(f"Defense: {self.defense}")
-        print(f"Gold: {self.gold}")
-        print(f"Position: {self.position} {self.direction} ({self.previous_direction})")
+        stats = []
+        stats.append(f"ライフ: {self.health}/ {self.max_health}")
+        health_bar = self.generate_bar(self.health, self.max_health)
+        stats.append(f" {health_bar}")
+        stats.append(f"マナ: {self.mana}/ {self.max_mana}")
+        Mana_bar = self.generate_bar(self.mana, self.max_mana)
+        stats.append(f" {Mana_bar}")
+
+        stats.append(f"攻撃力: {self.attack_power}")
+        stats.append(f"防御力: {self.defense}")
+        stats.append(f" ")
+
+        stats.append(f"レベル:   {self.level} ")
+
+
+        stats.append(f"お金: {self.gold}")
+        stats.append(f"位置: {self.position}")
+        return "\n".join(stats)
 
