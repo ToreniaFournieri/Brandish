@@ -55,10 +55,10 @@ class Player:
                 self.position = (x, y+1)
 
 
-        elif action == "Q":
-            self.rotate_left()
-        elif action == "E":
-            self.rotate_right()
+        #elif action == "Q":
+        #    self.rotate_left()
+        #elif action == "E":
+        #    self.rotate_right()
         else:
             print("Invalid direction or there's a wall!")
 
