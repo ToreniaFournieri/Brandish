@@ -28,6 +28,7 @@ def game(stdscr):
                 #maze[y][x] = "M"  # This can be changed based on how you want to represent monsters in the maze
 
     jump_mode = False
+    display_full_map = False  # Add this outside the game loop
 
     logs = []
 
@@ -35,14 +36,20 @@ def game(stdscr):
     while True:
         # Use curses to display
         stdscr.clear()
+
+        
+
         # Show player stats and message below the maze
         player.display_stats(stdscr, 0, 0)
+
+
 
 
         #display_maze(maze, player.position)
         relative_view = get_relative_view(maze, player)
         view_display = [''.join(["#" if cell == 1 else " " if cell == 0 else cell for cell in row]) for row in relative_view]
         # Display the player's relative view of the maze
+
 
 
         monsterLine = 12
@@ -104,6 +111,7 @@ def game(stdscr):
 
         stdscr.addstr(0, 70, f"スキル")
         stdscr.addstr(1, 70, f"z: ジャンプ {jump_mode}")
+        stdscr.addstr(2, 70, f"m: 大きい地図表示 {display_full_map}")
 
         # Display inventory somewhere on the screen
         inventory_display_position = (8, 50)  # Or wherever you want it
@@ -112,6 +120,15 @@ def game(stdscr):
         for idx, (item, count) in enumerate(player.inventory.items()):
             stdscr.addstr(inventory_display_position[0] + idx + 1, inventory_display_position[1], f"{shortcut_keys[idx]}: {item}: {count}")
 
+        # Then, conditionally display the map:
+        if display_full_map:
+            for idx, row in enumerate(maze):
+                for jdx, cell in enumerate(row):
+                    if (jdx, idx) == player.position:
+                        stdscr.addstr(idx, jdx +18, "@")  # Display player with '@' character
+                    else:
+                        stdscr.addstr(idx, jdx + 18, cell)
+                
 
         # Get user input with curses
         action = stdscr.getch()
@@ -163,6 +180,9 @@ def game(stdscr):
 
         elif action in [ord('P'), ord('p')]:
             break
+        elif action == ord('m'):
+            display_full_map = not display_full_map
+
         else:
             continue # Skip loop iteration for other keys
 
