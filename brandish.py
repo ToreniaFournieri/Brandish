@@ -25,7 +25,7 @@ def game(stdscr):
     for y, row in enumerate(maze):
         for x, cell in enumerate(row):
             if cell == "🐀":
-                monster = Monster("大鼠",40,"1d3",0,2,position=(x, y))  # Assuming Monster class has a position attribute
+                monster = Monster("🐀大鼠",40,"1d3",0,2,position=(x, y))  # Assuming Monster class has a position attribute
                 monsters.append(monster)
                 #maze[y][x] = "M"  # This can be changed based on how you want to represent monsters in the maze
 
