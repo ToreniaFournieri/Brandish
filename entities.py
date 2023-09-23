@@ -22,6 +22,8 @@ class Player:
         self.left_ring = "None"
         self.right_ring = "None"
         self.inventory = defaultdict(int)  # Using defaultdict from collections module
+        self.jump_mode = False
+        self.display_full_map = False  # Add this outside the game loop
 
 
 
