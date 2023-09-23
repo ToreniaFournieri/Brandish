@@ -102,6 +102,9 @@ def game(stdscr):
         stdscr.addstr(5, 50, f"左指輪: {player.left_ring}")
         stdscr.addstr(6, 50, f"右指輪: {player.right_ring}")
 
+        stdscr.addstr(0, 70, f"スキル")
+        stdscr.addstr(1, 70, f"z: ジャンプ {jump_mode}")
+
         # Display inventory somewhere on the screen
         inventory_display_position = (8, 50)  # Or wherever you want it
         stdscr.addstr(inventory_display_position[0], inventory_display_position[1], "アイテム:")
@@ -123,7 +126,7 @@ def game(stdscr):
         }
 
         # If 'j' is pressed, set jump_mode to True
-        if action == ord('j'):
+        if action == ord('z'):
             jump_mode = True
             continue
         # Translate action into game command
