@@ -8,7 +8,7 @@ class Player:
         self.max_health = 100
         self.mana = 32
         self.max_mana = 100
-        self.attack_power = "2d6"
+        self.attack_power = "1d6"
         self.defense = 1
         self.gold = 0
         self.position = start_position
@@ -85,6 +85,7 @@ class Player:
 
 class Monster:
     def __init__(self, health, attack_power, defense, experience_point, position):
+        self.max_health = health
         self.health = health
         self.attack_power = attack_power
         self.defense = defense

@@ -36,7 +36,7 @@ def game(stdscr):
     for y, row in enumerate(maze):
         for x, cell in enumerate(row):
             if cell == "M":
-                monster = Monster(20,"1d3",0,2,position=(x, y))  # Assuming Monster class has a position attribute
+                monster = Monster(40,"1d3",0,2,position=(x, y))  # Assuming Monster class has a position attribute
                 monsters.append(monster)
                 #maze[y][x] = "M"  # This can be changed based on how you want to represent monsters in the maze
 
@@ -54,6 +54,11 @@ def game(stdscr):
         relative_view = get_relative_view(maze, player)
         view_display = [''.join(["#" if cell == 1 else " " if cell == 0 else cell for cell in row]) for row in relative_view]
         # Display the player's relative view of the maze
+
+
+        stdscr.addstr(14, 24, f"モンスター {monster.health}/{monster.max_health}" )
+
+
         visual_maze = generate_visual_2D_view(view_display)
         for idx, row in enumerate(visual_maze):
             stdscr.addstr(idx +1, 24, ''.join(map(str, row)))
