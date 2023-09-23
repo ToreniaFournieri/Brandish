@@ -9,6 +9,8 @@ def game(stdscr):
     curses.curs_set(0)  # hide cursor
     stdscr.keypad(1)    # enable special keys
     stdscr.timeout(100) # set getch() non-blocking
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_MAGENTA)  # Foreground: White, Background: Blue for current health
 
     # Generate the maze and find the starting position
     global maze    
@@ -21,7 +23,7 @@ def game(stdscr):
     for y, row in enumerate(maze):
         for x, cell in enumerate(row):
             if cell == "M":
-                monster = Monster(40,"1d3",0,2,position=(x, y))  # Assuming Monster class has a position attribute
+                monster = Monster("大鼠",40,"1d3",0,2,position=(x, y))  # Assuming Monster class has a position attribute
                 monsters.append(monster)
                 #maze[y][x] = "M"  # This can be changed based on how you want to represent monsters in the maze
 
@@ -32,8 +34,9 @@ def game(stdscr):
         # Use curses to display
         stdscr.clear()
         # Show player stats and message below the maze
-        stats = player.display_stats() # Modify display_stats() to return a string instead of print
-        stdscr.addstr(0, 0, stats)
+        player.display_stats(stdscr, 0, 0)
+        #stats = player.display_stats() # Modify display_stats() to return a string instead of print
+        #stdscr.addstr(0, 0, stats)
 
         #display_maze(maze, player.position)
         relative_view = get_relative_view(maze, player)
@@ -41,14 +44,34 @@ def game(stdscr):
         # Display the player's relative view of the maze
 
 
-        stdscr.addstr(14, 24, f"モンスター {monster.health}/{monster.max_health}" )
+        monsterLine = 12
+        for monster in monsters:
+            if monster.isAdjacent:
+                filled_length = int(20 * (monster.health / monster.max_health))
+                unfilled_length = 20 - filled_length
+    
+                filled_segment = " " * filled_length
+                unfilled_segment = " " * unfilled_length
+
+                health_text = f"{monster.name} {monster.health}/{monster.max_health}".ljust(20)
+
+                for i, char in enumerate(health_text):
+                    if i < filled_length:
+                        stdscr.addstr(monsterLine, 0 + i, char, curses.color_pair(1) | curses.A_BOLD)
+                    else:
+                        stdscr.addstr(monsterLine, 0 + i, char, curses.A_BOLD)
+
+
+
+
+                monsterLine += 1
 
 
         visual_maze = generate_visual_2D_view(view_display)
         for idx, row in enumerate(visual_maze):
-            stdscr.addstr(idx +1, 24, ''.join(map(str, row)))
+            stdscr.addstr(idx +1, 26, ''.join(map(str, row)))
 
-        stdscr.addstr(len(visual_maze) + 2, 0, "方向キーで移動, Pでやめる: ")
+        stdscr.addstr(len(visual_maze) + 5, 0, "方向キーで移動, Pでやめる: ")
 
         stdscr.addstr(0, 50, f"装備")
         stdscr.addstr(1, 50, f"左手: {player.left_hand}")
@@ -107,6 +130,7 @@ def game(stdscr):
 
         for monster in monsters:
             if is_adjacent(player.position, monster.position):
+                monster.isAdjacent = True
                 battle = Battle(player, monster)
                 result = battle.commence_battle()
                 print(result)
@@ -116,6 +140,8 @@ def game(stdscr):
                     # Update the maze to remove the monster character
                     x, y = monster.position
                     maze[y] = maze[y][:x] + "%" + maze[y][x+1:]
+            else:
+                monster.isAdjacent = False
 
 
 
