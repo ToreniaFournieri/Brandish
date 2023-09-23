@@ -14,21 +14,31 @@ def game(stdscr):
     global maze
     
     maze = []
-    for row in maze_map:
-        maze_row = []
-        for cell in row:
-            if cell == "#":
-                maze_row.append(1)
-            elif cell in [".", "+", "^", "$", "(", ")", "[", "!"]:
-                maze_row.append(0)
-            elif cell == "S":
-                maze_row.append("S")
-            else:
-                maze_row.append(cell)  # For any other characters, add them as-is
-        maze.append(maze_row)
+    maze = maze_map
+    #for row in maze_map:
+    #    maze_row = []
+    #    for cell in row:
+    #        if cell == "#":
+    #            maze_row.append(1)
+    #        elif cell in [".", "+", "^", "$", "(", ")", "[", "!"]:
+    #            maze_row.append(0)
+    #        elif cell == "S":
+    #            maze_row.append("S")
+    #        else:
+    #            maze_row.append(cell)  # For any other characters, add them as-is
+    #    maze.append(maze_row)
+
 
     # Find the starting position
     start_position = [(x, y) for y, row in enumerate(maze) for x, cell in enumerate(row) if cell == "S"][0]
+    monsters = []
+
+    for y, row in enumerate(maze):
+        for x, cell in enumerate(row):
+            if cell == "M":
+                monster = Monster(20,"1d3",0,2,position=(x, y))  # Assuming Monster class has a position attribute
+                monsters.append(monster)
+                #maze[y][x] = "M"  # This can be changed based on how you want to represent monsters in the maze
 
     jump_mode = False
 
@@ -101,6 +111,19 @@ def game(stdscr):
             break
         else:
             continue # Skip loop iteration for other keys
+
+        for monster in monsters:
+            if is_adjacent(player.position, monster.position):
+                battle = Battle(player, monster)
+                result = battle.commence_battle()
+                print(result)
+        
+                if monster.health <= 0:
+                    monsters.remove(monster)
+                    # Update the maze to remove the monster character
+                    x, y = monster.position
+                    maze[y] = maze[y][:x] + "%" + maze[y][x+1:]
+
 
 
         #player.move(action, maze)

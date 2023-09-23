@@ -12,6 +12,7 @@ def generate_visual_2D_view(grid):
     # Create an output grid initialized with empty cells
     #output = [[E for _ in range(cols)] for _ in range(rows)]
 
+
     # Process each cell in the grid
     for i in range(rows):
         for j in range(cols):
