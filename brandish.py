@@ -29,14 +29,15 @@ def game(stdscr):
 
     jump_mode = False
 
+    logs = []
+
     player = Player(start_position)
     while True:
         # Use curses to display
         stdscr.clear()
         # Show player stats and message below the maze
         player.display_stats(stdscr, 0, 0)
-        #stats = player.display_stats() # Modify display_stats() to return a string instead of print
-        #stdscr.addstr(0, 0, stats)
+
 
         #display_maze(maze, player.position)
         relative_view = get_relative_view(maze, player)
@@ -73,6 +74,26 @@ def game(stdscr):
 
         stdscr.addstr(len(visual_maze) + 5, 0, "方向キーで移動, Pでやめる: ")
 
+        # Check for game over
+        if maze[player.position[1]][player.position[0]] == "E":
+            logs.append("おめでとう！ゲームクリア")
+            break
+        elif player.isDead:
+            logs.append(f"{player.name}は死んでしまった！おしまい")
+            break
+
+        pos = 0
+        for log in logs:
+            stdscr.addstr(len(visual_maze) + 6 + pos, 0, f"{log}")
+            pos += 1
+
+
+        stdscr.refresh()
+
+        # Keep only the latest 5 logs
+        if len(logs) > 5:
+            logs.pop(0)
+
         stdscr.addstr(0, 50, f"装備")
         stdscr.addstr(1, 50, f"左手: {player.left_hand}")
         stdscr.addstr(2, 50, f"鎧: {player.armour}")
@@ -87,7 +108,6 @@ def game(stdscr):
         stdscr.addstr(11, 50, f"小石")
 
 
-        stdscr.refresh()
 
         # Get user input with curses
         action = stdscr.getch()
@@ -98,7 +118,7 @@ def game(stdscr):
         # Translate action into game command
         if action == curses.KEY_UP:
             if jump_mode:
-                player.move("jup", maze)
+                logs.append(player.move("jup", maze))
                 jump_mode = False
             else:
                 player.move("up", maze)
@@ -132,8 +152,7 @@ def game(stdscr):
             if is_adjacent(player.position, monster.position):
                 monster.isAdjacent = True
                 battle = Battle(player, monster)
-                result = battle.commence_battle()
-                print(result)
+                logs.append(battle.commence_battle())
         
                 if monster.health <= 0:
                     monsters.remove(monster)
@@ -143,16 +162,7 @@ def game(stdscr):
             else:
                 monster.isAdjacent = False
 
-
-
-        #player.move(action, maze)
         
-        # Check for game over
-        if maze[player.position[1]][player.position[0]] == "E":
-            stdscr.addstr(len(visual_maze) + 3, 0, "Congratulations! You've reached the end of the maze!")
-            stdscr.refresh()
-            stdscr.getch() # Wait for a key press before ending
-            break
 
 if __name__ == "__main__":
     curses.wrapper(game)
