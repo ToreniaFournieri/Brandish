@@ -98,19 +98,29 @@ def game(stdscr):
         stdscr.addstr(1, 50, f"左手: {player.left_hand}")
         stdscr.addstr(2, 50, f"鎧: {player.armour}")
         stdscr.addstr(3, 50, f"右手: {player.right_hand}")
-        stdscr.addstr(4, 50, f"お気に入り: {player.shortcut}")
+
         stdscr.addstr(5, 50, f"左指輪: {player.left_ring}")
         stdscr.addstr(6, 50, f"右指輪: {player.right_ring}")
 
-        stdscr.addstr(8, 50, f"アイテム")
-        stdscr.addstr(9, 50, f"ポーション")
-        stdscr.addstr(10, 50, f"合鍵")
-        stdscr.addstr(11, 50, f"小石")
-
+        # Display inventory somewhere on the screen
+        inventory_display_position = (8, 50)  # Or wherever you want it
+        stdscr.addstr(inventory_display_position[0], inventory_display_position[1], "アイテム:")
+        for idx, (item, count) in enumerate(player.inventory.items()):
+            stdscr.addstr(inventory_display_position[0] + idx + 1, inventory_display_position[1], f"{item}: {count}")
 
 
         # Get user input with curses
         action = stdscr.getch()
+        key_to_inventory_index = {
+            ord('a'): 0,
+            ord('s'): 1,
+            ord('d'): 2,
+            ord('f'): 3,
+            ord('g'): 4,
+            ord('h'): 5,
+            # ... you can extend this for more keys as needed
+        }
+
         # If 'j' is pressed, set jump_mode to True
         if action == ord('j'):
             jump_mode = True
@@ -143,10 +153,19 @@ def game(stdscr):
         elif action in [ord('.')]:
             pass
             #one turn rest.
+        elif action in key_to_inventory_index:
+                item_index = key_to_inventory_index[action]
+                logs.append(player.use_item(item_index))
         elif action in [ord('P'), ord('p')]:
             break
         else:
             continue # Skip loop iteration for other keys
+
+        #Check the tile under the player
+        x, y = player.position
+        if maze[y][x] == "!":
+            player.add_item("potion")
+            maze[y] = maze[y][:x] + "." + maze[y][x+1:]
 
         for monster in monsters:
             if is_adjacent(player.position, monster.position):

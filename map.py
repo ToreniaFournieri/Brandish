@@ -41,14 +41,6 @@ def pad_relative_view(view, up, down, left, right):
     
     return view
 
-    #rotated_maze = rotate_maze(maze, player.direction)
-    #rotated_position = get_rotated_position(player.position, player.direction, len(maze[0]), len(maze))
-    #px, py = rotated_position
-        # Define the vision limits
-    #up = 6
-    #down = 1
-    #left = 3
-    #right = 3
 
 
 def get_relative_view(maze, player):

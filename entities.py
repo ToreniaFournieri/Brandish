@@ -1,6 +1,6 @@
 import random
 import curses
-
+from collections import defaultdict
 
 # Player class and any other game entities
 class Player:
@@ -19,15 +19,38 @@ class Player:
         self.left_hand = "Shield"
         self.armour = "Armour"
         self.right_hand = "Short sowrd"
-        self.shortcut = "Potion"
         self.left_ring = "None"
         self.right_ring = "None"
+        self.inventory = defaultdict(int)  # Using defaultdict from collections module
+
+
+
+    def add_item(self, item_name):
+        self.inventory[item_name] += 1
+
+    def use_item(self, item_index):
+        log = ""
+        items = list(self.inventory.keys())
+        if item_index < len(items):
+            item_name = items[item_index]
+            if self.inventory[item_name] > 0:
+                self.inventory[item_name] -= 1
+                # apply item effects here, e.g.:
+                if item_name == "potion":
+                    restore = 50
+                    self.health += restore  # or however much you want to heal
+                    log = f"ポーションを使い体力が{restore}回復した!"
+            else:
+                log = "そのアイテムを持っていない"
+        else:
+            log = "そのアイテムは存在しない"
+        return log
 
 
     def move(self, action, maze):
         x, y = self.position
         dx, dy = 0, 0
-        MOVEABLE_TILES = {"S",".", "$", "%", "+", "^", "$", "(", ")", "[", "!"} 
+        MOVEABLE_TILES = {"S",".", "$", "%", "+", "^", "$", "(", ")", "[", "!","*"} 
         text = ""
         if action == "up" and maze[y-1][x] in MOVEABLE_TILES:
             self.position = (x, y-1)
@@ -48,11 +71,9 @@ class Player:
             self.position = (x-1, y)
         elif action == "jleft" and maze[y][x-2] in MOVEABLE_TILES:
             self.position = (x-2, y)
-
-
-
         else:
             text = "Invalid direction or there's a wall!"
+
 
         return text
 

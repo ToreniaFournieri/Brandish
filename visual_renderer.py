@@ -6,7 +6,8 @@ def generate_visual_2D_view(grid):
 
     # Define constants
     E = '.'  # Empty cell
-    W = '#'  # Wall cell
+    Wall = '#' #
+    W = {'#', "+"}  # Wall like object
 
     output = [list(row) for row in grid]
     # Create an output grid initialized with empty cells
@@ -16,7 +17,7 @@ def generate_visual_2D_view(grid):
     # Process each cell in the grid
     for i in range(rows):
         for j in range(cols):
-            if grid[i][j] == W:
+            if grid[i][j] in Wall:
                 top = grid[i-1][j] if i > 0 else W
                 bottom = grid[i+1][j] if i < rows-1 else W
                 left = grid[i][j-1] if j > 0 else W
@@ -27,95 +28,95 @@ def generate_visual_2D_view(grid):
                 # ?W?
                 # WWW
                 # ?W?
-                if top == W and left == W and right == W and bottom == W:
+                if top in W and left in W and right in W and bottom in W:
                     output[i][j] = '╋'  # All sides are walls
 
                 # 3 Walls
                 # ?W?
                 # WWW
                 # ?E?
-                elif top == W and left == W and right == W and bottom != W:
+                elif top in W and left in W and right in W and bottom not in W:
                     output[i][j] = '┻'
                 # ?W?
                 # EWW
                 # ?W?
-                elif top == W and right == W and bottom == W and left != W:
+                elif top in W and right in W and bottom in W and left not in W:
                     output[i][j] = '┣'
                 # ?E?
                 # WWW
                 # ?W?
-                elif top != W and right == W and bottom == W and left == W:
+                elif top not in W and right in W and bottom in W and left in W:
                     output[i][j] = '┳'
 
                 # ?W?
                 # WWE
                 # ?W?
-                elif top == W and right != W and bottom == W and left == W:
+                elif top in W and right not in W and bottom in W and left in W:
                     output[i][j] = '┫'
 
                 # 2 walls
                 # ?E?
                 # WWW
                 # ?E?
-                elif top != W and right == W and bottom != W and left == W:
+                elif top not in W and right in W and bottom not in W and left in W:
                     output[i][j] = '━'
 
                 # ?W?
                 # EWE
                 # ?W?
-                elif top == W and right != W and bottom == W and left != W:
+                elif top in W and right not in W and bottom in W and left not in W:
                     output[i][j] = '┃'
 
                 # ?E?
                 # WWE
                 # ?W?
-                elif top != W and left == W and bottom == W and right != W:
+                elif top not in W and left in W and bottom in W and right not in W:
                     output[i][j] = '┓'
                 # ?E?
                 # EWW
                 # ?W?
-                elif top != W and right == W and bottom == W and left != W:
+                elif top not in W and right in W and bottom in W and left not in W:
                     output[i][j] = '┏'
                 # EE?
                 # EWW
                 # ?W?
-                elif top != W and right == W and bottom == W and left != W:
+                elif top not in W and right in W and bottom in W and left not in W:
                     output[i][j] = '┏'
 
                 # ?W?
                 # WWE
                 # ?E?
-                elif top == W and left == W and bottom != W and right != W:
+                elif top in W and left in W and bottom not in W and right not in W:
                     output[i][j] = '┛'
                 # ?W?
                 # EWW
                 # ?E?
-                elif top == W and right == W and bottom != W and left != W:
+                elif top in W and right in W and bottom not in W and left not in W:
                     output[i][j] = '┗'
 
                 # 1 wall
                 # ?W?
                 # EWE
                 # ?E?
-                elif top == W and right != W and bottom != W and left != W:
+                elif top in W and right not in W and bottom not in W and left not in W:
                     output[i][j] = '╹'
                     
                 # ?E?
                 # EWE
                 # ?W?
-                elif top != W and right != W and bottom == W and left != W:
+                elif top not in W and right not in W and bottom in W and left not in W:
                     output[i][j] = '╻'
 
                 # ?E?
                 # EWW
                 # ?E?
-                elif top != W and right == W and bottom != W and left != W:
+                elif top not in W and right in W and bottom not in W and left not in W:
                     output[i][j] = '╺'
 
                 # ?E?
                 # WWE
                 # ?E?
-                elif top != W and right != W and bottom != W and left == W:
+                elif top not in W and right not in W and bottom not in W and left in W:
                     output[i][j] = '╸'
 
 
@@ -124,11 +125,14 @@ def generate_visual_2D_view(grid):
                 # ?E?
                 # EWE
                 # ?E?
-                elif top != W and right != W and bottom != W and left != W:
+                elif top not in W and right not in W and bottom not in W and left not in W:
                     output[i][j] = '▪'
 
                 else:
-                    output[i][j] = '?'
+                    output[i][j] = '？'
+            elif grid[i][j] == E:
+                output[i][j] = '.'
+
 
 
 
