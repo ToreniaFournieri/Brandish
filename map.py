@@ -70,7 +70,7 @@ def get_relative_view(maze, player):
         view.append(row)
     
     # Place the player in the relative view
-    view[up][left] = "＠"
+    view[up][left] = "🚶"
 
     return view
 

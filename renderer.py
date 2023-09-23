@@ -91,7 +91,7 @@ class Renderer:
             for idx, row in enumerate(maze):
                 for jdx, cell in enumerate(row):
                     if (jdx, idx) == player.position:
-                        stdscr.addstr(idx, jdx +18, "@")  # Display player with '@' character
+                        stdscr.addstr(idx, jdx +18, "🚶")  # Display player with '@' character
                     else:
                         stdscr.addstr(idx, jdx + 18, cell)
                 

@@ -5,7 +5,7 @@ from collections import defaultdict
 # Player class and any other game entities
 class Player:
     def __init__(self, start_position):
-        self.name ="主人公"
+        self.name ="🚶主人公"
         self.level = 1
         self.health = 76
         self.isDead = False
@@ -57,7 +57,7 @@ class Player:
     def move(self, action, maze):
         x, y = self.position
         dx, dy = 0, 0
-        MOVEABLE_TILES = {"Ｓ","・", "＄", "％", "🚪", "🕳", "💰", "🗡", "🛡", "🍾", "💎","🔽", "🔼"} 
+        MOVEABLE_TILES = {"Ｓ","・", "％", "🚪", "🕳", "💰", "🗡", "🛡", "🍾", "💎","🔽", "🔼"} 
         text = ""
         if action == "up" and maze[y-1][x] in MOVEABLE_TILES:
             self.position = (x, y-1)
