@@ -39,6 +39,7 @@ class Renderer:
                         stdscr.addstr(monsterLine, 0 + i, char, curses.A_BOLD)
                 monsterLine += 1
 
+        stdscr.addstr(0, 26, f"{player.current_map}")
         visual_maze = generate_visual_2D_view(view_display)
         for idx, row in enumerate(visual_maze):
             stdscr.addstr(idx +1, 26, ''.join(map(str, row)))

@@ -14,7 +14,7 @@ def game(stdscr):
     renderer = Renderer(stdscr)
     # Generate the maze and find the starting position
     global maze    
-    maze = maze_map
+    maze = Yuya_map1
 
     # Find the starting position
     start_position = [(x, y) for y, row in enumerate(maze) for x, cell in enumerate(row) if cell == "S"][0]
@@ -31,6 +31,8 @@ def game(stdscr):
     logs = []
 
     player = Player(start_position)
+    player.current_map = find_map_name(maze)
+
     while True:
 
         renderer.render(stdscr,player , maze, logs, monsters)
@@ -101,6 +103,17 @@ def game(stdscr):
             player.inventory["黄色の宝石"] += 1
             maze[y] = maze[y][:x] + "." + maze[y][x+1:]
             logs.append("黄色の宝石を拾った!")
+
+        elif maze[y][x] in ['>', '<']:
+            logs.append("階段にいる！")
+            # Check if this stair exists in the master mapping
+            if (player.current_map, player.position) in stairs_master:
+                destination_map, destination_position = stairs_master[(player.current_map, player.position)]
+                # Now move the player to destination_map and destination_position
+                player.current_map = destination_map
+                maze = all_maps[player.current_map]
+                player.position = destination_position
+                logs.append("階段を登った/降った")
 
         for monster in monsters:
             if is_adjacent(player.position, monster.position):

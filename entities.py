@@ -24,7 +24,7 @@ class Player:
         self.inventory = defaultdict(int)  # Using defaultdict from collections module
         self.jump_mode = False
         self.display_full_map = False  # Add this outside the game loop
-
+        self.current_map = ""
 
 
     def add_item(self, item_name):
@@ -56,7 +56,7 @@ class Player:
     def move(self, action, maze):
         x, y = self.position
         dx, dy = 0, 0
-        MOVEABLE_TILES = {"S",".", "$", "%", "+", "^", "$", "(", ")", "[", "!","*"} 
+        MOVEABLE_TILES = {"S",".", "$", "%", "+", "^", "$", "(", ")", "[", "!","*", "<",">"} 
         text = ""
         if action == "up" and maze[y-1][x] in MOVEABLE_TILES:
             self.position = (x, y-1)
