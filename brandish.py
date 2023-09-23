@@ -30,6 +30,7 @@ def game(stdscr):
     # Find the starting position
     start_position = [(x, y) for y, row in enumerate(maze) for x, cell in enumerate(row) if cell == "S"][0]
 
+    jump_mode = False
 
     player = Player(start_position)
     while True:
@@ -67,16 +68,35 @@ def game(stdscr):
 
         # Get user input with curses
         action = stdscr.getch()
-
+        # If 'j' is pressed, set jump_mode to True
+        if action == ord('j'):
+            jump_mode = True
+            continue
         # Translate action into game command
         if action == curses.KEY_UP:
-            player.move("up",maze)
+            if jump_mode:
+                player.move("jup", maze)
+                jump_mode = False
+            else:
+                player.move("up", maze)
         elif action == curses.KEY_DOWN:
-            player.move("down",maze)
+            if jump_mode:
+                player.move("jdown", maze)
+                jump_mode = False
+            else:
+                player.move("down", maze)
         elif action == curses.KEY_LEFT:
-            player.move("left",maze)
+            if jump_mode:
+                player.move("jleft", maze)
+                jump_mode = False
+            else:
+                player.move("left", maze)
         elif action == curses.KEY_RIGHT:
-            player.move("right",maze)
+            if jump_mode:
+                player.move("jright", maze)
+                jump_mode = False
+            else:
+                player.move("right", maze)
         elif action in [ord('P'), ord('p')]:
             break
         else:

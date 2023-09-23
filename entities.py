@@ -23,15 +23,24 @@ class Player:
 
         if action == "up" and maze[y-1][x] != 1:
             self.position = (x, y-1)
+        elif action == "jup" and maze[y-2][x] != 1:
+            self.position = (x, y-2)
 
         elif action == "down" and maze[y+1][x] != 1:
             self.position = (x, y+1)
+        elif action == "jdown" and maze[y+2][x] != 1:
+            self.position = (x, y+2)
 
         elif action == "right" and maze[y][x+1] != 1:
             self.position = (x+1, y)
+        elif action == "jright" and maze[y][x+2] != 1:
+            self.position = (x+2, y)
 
         elif action == "left" and maze[y][x-1] != 1:
             self.position = (x-1, y)
+        elif action == "jleft" and maze[y][x-2] != 1:
+            self.position = (x-2, y)
+
 
 
         else:
