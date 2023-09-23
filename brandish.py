@@ -105,20 +105,21 @@ def game(stdscr):
         # Display inventory somewhere on the screen
         inventory_display_position = (8, 50)  # Or wherever you want it
         stdscr.addstr(inventory_display_position[0], inventory_display_position[1], "アイテム:")
+        shortcut_keys = ['a', 's', 'd', 'f', 'g', 'h']  # ... extend this list if needed
         for idx, (item, count) in enumerate(player.inventory.items()):
-            stdscr.addstr(inventory_display_position[0] + idx + 1, inventory_display_position[1], f"{item}: {count}")
+            stdscr.addstr(inventory_display_position[0] + idx + 1, inventory_display_position[1], f"{shortcut_keys[idx]}: {item}: {count}")
 
 
         # Get user input with curses
         action = stdscr.getch()
         key_to_inventory_index = {
-            ord('a'): 0,
-            ord('s'): 1,
-            ord('d'): 2,
-            ord('f'): 3,
-            ord('g'): 4,
-            ord('h'): 5,
-            # ... you can extend this for more keys as needed
+            ord('a'): 0 if len(player.inventory) > 0 else None,
+            ord('s'): 1 if len(player.inventory) > 1 else None,
+            ord('d'): 1 if len(player.inventory) > 2 else None,
+            ord('f'): 1 if len(player.inventory) > 3 else None,
+            ord('g'): 1 if len(player.inventory) > 4 else None,
+            ord('h'): 1 if len(player.inventory) > 5 else None,
+            # ... and so on, but make sure to check if the item exists before accessing!
         }
 
         # If 'j' is pressed, set jump_mode to True
@@ -153,9 +154,10 @@ def game(stdscr):
         elif action in [ord('.')]:
             pass
             #one turn rest.
-        elif action in key_to_inventory_index:
-                item_index = key_to_inventory_index[action]
-                logs.append(player.use_item(item_index))
+        elif action in key_to_inventory_index and key_to_inventory_index[action] is not None:
+            item_index = key_to_inventory_index[action]
+            logs.append(player.use_item(item_index))
+
         elif action in [ord('P'), ord('p')]:
             break
         else:
@@ -164,8 +166,13 @@ def game(stdscr):
         #Check the tile under the player
         x, y = player.position
         if maze[y][x] == "!":
-            player.add_item("potion")
+            player.add_item("ポーション")
             maze[y] = maze[y][:x] + "." + maze[y][x+1:]
+            logs.append("ポーションを手に入れた!")
+        elif maze[y][x] == "*":
+            player.inventory["黄色の宝石"] += 1
+            maze[y] = maze[y][:x] + "." + maze[y][x+1:]
+            logs.append("黄色の宝石を拾った!")
 
         for monster in monsters:
             if is_adjacent(player.position, monster.position):

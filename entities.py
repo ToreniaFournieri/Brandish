@@ -35,8 +35,11 @@ class Player:
             item_name = items[item_index]
             if self.inventory[item_name] > 0:
                 self.inventory[item_name] -= 1
+                # If item count reaches 0, remove it from the inventory
+                if self.inventory[item_name] == 0:
+                    del self.inventory[item_name]
                 # apply item effects here, e.g.:
-                if item_name == "potion":
+                if item_name == "ポーション":
                     restore = 50
                     self.health += restore  # or however much you want to heal
                     log = f"ポーションを使い体力が{restore}回復した!"
@@ -45,6 +48,7 @@ class Player:
         else:
             log = "そのアイテムは存在しない"
         return log
+
 
 
     def move(self, action, maze):
