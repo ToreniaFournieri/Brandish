@@ -11,23 +11,8 @@ def game(stdscr):
     stdscr.timeout(100) # set getch() non-blocking
 
     # Generate the maze and find the starting position
-    global maze
-    
-    maze = []
+    global maze    
     maze = maze_map
-    #for row in maze_map:
-    #    maze_row = []
-    #    for cell in row:
-    #        if cell == "#":
-    #            maze_row.append(1)
-    #        elif cell in [".", "+", "^", "$", "(", ")", "[", "!"]:
-    #            maze_row.append(0)
-    #        elif cell == "S":
-    #            maze_row.append("S")
-    #        else:
-    #            maze_row.append(cell)  # For any other characters, add them as-is
-    #    maze.append(maze_row)
-
 
     # Find the starting position
     start_position = [(x, y) for y, row in enumerate(maze) for x, cell in enumerate(row) if cell == "S"][0]
@@ -112,6 +97,9 @@ def game(stdscr):
                 jump_mode = False
             else:
                 player.move("right", maze)
+        elif action in [ord('.')]:
+            pass
+            #one turn rest.
         elif action in [ord('P'), ord('p')]:
             break
         else:
