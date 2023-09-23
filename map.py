@@ -48,11 +48,10 @@ def get_relative_view(maze, player):
     px, py = player.position
     
     # Define the vision limits
-    up = 6
-    down = 6
+    up = 10
+    down = 10
     left = 10
     right = 10
-
 
     # Slice the maze to get the player's view
     start_y = py - up
@@ -71,7 +70,7 @@ def get_relative_view(maze, player):
         view.append(row)
     
     # Place the player in the relative view
-    view[up][left] = "@"
+    view[up][left] = "＠"
 
     return view
 

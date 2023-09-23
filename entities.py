@@ -41,10 +41,11 @@ class Player:
                 if self.inventory[item_name] == 0:
                     del self.inventory[item_name]
                 # apply item effects here, e.g.:
-                if item_name == "ポーション":
-                    restore = 50
-                    self.health += restore  # or however much you want to heal
-                    log = f"ポーションを使い体力が{restore}回復した!"
+                if item_name == "🍾ポーション":
+                    potential_new_health = self.health + 50
+                    actual_restore = min(self.max_health, potential_new_health) - self.health
+                    self.health += actual_restore
+                    log = f"ポーションを使い体力が{actual_restore}回復した!"
             else:
                 log = "そのアイテムを持っていない"
         else:
@@ -56,7 +57,7 @@ class Player:
     def move(self, action, maze):
         x, y = self.position
         dx, dy = 0, 0
-        MOVEABLE_TILES = {"S",".", "$", "%", "+", "^", "$", "(", ")", "[", "!","*", "<",">"} 
+        MOVEABLE_TILES = {"Ｓ","・", "＄", "％", "🚪", "🕳", "💰", "🗡", "🛡", "🍾", "💎","🔽", "🔼"} 
         text = ""
         if action == "up" and maze[y-1][x] in MOVEABLE_TILES:
             self.position = (x, y-1)
@@ -117,7 +118,7 @@ class Player:
         stdscr.addstr(start_y + 4, start_x, f"防御力: {self.defense}".ljust(20))
         stdscr.addstr(start_y + 5, start_x, " ".ljust(20))  # Empty line
         stdscr.addstr(start_y + 6, start_x, f"レベル: {self.level}".ljust(20))
-        stdscr.addstr(start_y + 7, start_x, f"お金: {self.gold}".ljust(20))
+        stdscr.addstr(start_y + 7, start_x, f"お金: {self.gold}円".ljust(20))
         stdscr.addstr(start_y + 8, start_x, f"位置: {self.position}".ljust(20))
     
 

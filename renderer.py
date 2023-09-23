@@ -18,7 +18,7 @@ class Renderer:
 
         #display_maze(maze, player.position)
         relative_view = get_relative_view(maze, player)
-        view_display = [''.join(["#" if cell == 1 else " " if cell == 0 else cell for cell in row]) for row in relative_view]
+        view_display = [''.join(["＃" if cell == 1 else " " if cell == 0 else cell for cell in row]) for row in relative_view]
         # Display the player's relative view of the maze
 
         monsterLine = 12
@@ -40,11 +40,12 @@ class Renderer:
                 monsterLine += 1
 
         stdscr.addstr(0, 26, f"{player.current_map}")
-        visual_maze = generate_visual_2D_view(view_display)
-        for idx, row in enumerate(visual_maze):
-            stdscr.addstr(idx +1, 26, ''.join(map(str, row)))
+        generate_visual_2D_view(stdscr, view_display, 1,26)
+        #visual_maze = generate_visual_2D_view(view_display)
+        #for idx, row in enumerate(visual_maze):
+        #    stdscr.addstr(idx +1, 26, ''.join(map(str, row)))
 
-        stdscr.addstr(len(visual_maze) + 5, 0, "方向キーで移動, Pでやめる: ")
+        stdscr.addstr(18+ 5, 0, "方向キーで移動, Pでやめる: ")
 
         # Check for game over
         if maze[player.position[1]][player.position[0]] == "E":
@@ -56,7 +57,7 @@ class Renderer:
 
         pos = 0
         for log in logs:
-            stdscr.addstr(len(visual_maze) + 6 + pos, 0, f"{log}")
+            stdscr.addstr(18 + 6 + pos, 0, f"{log}")
             pos += 1
 
 
@@ -66,20 +67,20 @@ class Renderer:
         if len(logs) > 5:
             logs.pop(0)
 
-        stdscr.addstr(0, 50, f"装備")
-        stdscr.addstr(1, 50, f"左手: {player.left_hand}")
-        stdscr.addstr(2, 50, f"鎧: {player.armour}")
-        stdscr.addstr(3, 50, f"右手: {player.right_hand}")
+        stdscr.addstr(0, 70, f"装備")
+        stdscr.addstr(1, 70, f"左手: {player.left_hand}")
+        stdscr.addstr(2, 70, f"鎧: {player.armour}")
+        stdscr.addstr(3, 70, f"右手: {player.right_hand}")
 
-        stdscr.addstr(5, 50, f"左指輪: {player.left_ring}")
-        stdscr.addstr(6, 50, f"右指輪: {player.right_ring}")
+        stdscr.addstr(5, 70, f"左指輪: {player.left_ring}")
+        stdscr.addstr(6, 70, f"右指輪: {player.right_ring}")
 
-        stdscr.addstr(0, 70, f"スキル")
-        stdscr.addstr(1, 70, f"z: ジャンプ {player.jump_mode}")
-        stdscr.addstr(2, 70, f"m: 大きい地図表示 {player.display_full_map}")
+        stdscr.addstr(0, 90, f"スキル")
+        stdscr.addstr(1, 90, f"z: ジャンプ {player.jump_mode}")
+        stdscr.addstr(2, 90, f"m: 大きい地図表示 {player.display_full_map}")
 
         # Display inventory somewhere on the screen
-        inventory_display_position = (8, 50)  # Or wherever you want it
+        inventory_display_position = (8, 70)  # Or wherever you want it
         stdscr.addstr(inventory_display_position[0], inventory_display_position[1], "アイテム:")
         shortcut_keys = ['a', 's', 'd', 'f', 'g', 'h']  # ... extend this list if needed
         for idx, (item, count) in enumerate(player.inventory.items()):

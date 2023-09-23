@@ -11,18 +11,20 @@ def game(stdscr):
     stdscr.timeout(100) # set getch() non-blocking
     curses.start_color()
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_MAGENTA)  # Foreground: White, Background: Blue for current health
+    curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_BLACK)
     renderer = Renderer(stdscr)
     # Generate the maze and find the starting position
     global maze    
-    maze = Yuya_map1
+    maze = Cave_map1
 
     # Find the starting position
-    start_position = [(x, y) for y, row in enumerate(maze) for x, cell in enumerate(row) if cell == "S"][0]
+    start_position = [(x, y) for y, row in enumerate(maze) for x, cell in enumerate(row) if cell == "Ｓ"][0]
     monsters = []
 
     for y, row in enumerate(maze):
         for x, cell in enumerate(row):
-            if cell == "M":
+            if cell == "🐀":
                 monster = Monster("大鼠",40,"1d3",0,2,position=(x, y))  # Assuming Monster class has a position attribute
                 monsters.append(monster)
                 #maze[y][x] = "M"  # This can be changed based on how you want to represent monsters in the maze
@@ -95,17 +97,19 @@ def game(stdscr):
 
         #Check the tile under the player
         x, y = player.position
-        if maze[y][x] == "!":
-            player.add_item("ポーション")
-            maze[y] = maze[y][:x] + "." + maze[y][x+1:]
-            logs.append("ポーションを手に入れた!")
-        elif maze[y][x] == "*":
-            player.inventory["黄色の宝石"] += 1
-            maze[y] = maze[y][:x] + "." + maze[y][x+1:]
-            logs.append("黄色の宝石を拾った!")
-
-        elif maze[y][x] in ['>', '<']:
-            logs.append("階段にいる！")
+        if maze[y][x] == "🍾":
+            player.add_item("🍾ポーション")
+            maze[y] = maze[y][:x] + "・" + maze[y][x+1:]
+            logs.append("🍾ポーションを手に入れた!")
+        elif maze[y][x] == "💎":
+            player.inventory["💎黄色の宝石"] += 1
+            maze[y] = maze[y][:x] + "・" + maze[y][x+1:]
+            logs.append("💎黄色の宝石を拾った!")
+        elif maze[y][x] == "💰":
+            player.gold += 10
+            maze[y] = maze[y][:x] + "・" + maze[y][x+1:]  # Replace the gold with an empty tile
+            logs.append("💰お金を10円手に入れたぞ！")
+        elif maze[y][x] in ['🔼', '🔽']:
             # Check if this stair exists in the master mapping
             if (player.current_map, player.position) in stairs_master:
                 destination_map, destination_position = stairs_master[(player.current_map, player.position)]
@@ -125,7 +129,7 @@ def game(stdscr):
                     monsters.remove(monster)
                     # Update the maze to remove the monster character
                     x, y = monster.position
-                    maze[y] = maze[y][:x] + "%" + maze[y][x+1:]
+                    maze[y] = maze[y][:x] + "％" + maze[y][x+1:]
             else:
                 monster.isAdjacent = False
 

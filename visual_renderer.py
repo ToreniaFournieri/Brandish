@@ -1,23 +1,31 @@
+import curses
 
-def generate_visual_2D_view(grid):
+
+def generate_visual_2D_view(stdscr, grid, x, y):
     # Get grid dimensions
     rows = len(grid)
     cols = len(grid[0])
 
     # Define constants
-    E = '.'  # Empty cell
-    Wall = '#' #
+    E = '・'  # Empty cell
+    Wall = '＃' #
     W = {'#', "+"}  # Wall like object
 
     output = [list(row) for row in grid]
-    # Create an output grid initialized with empty cells
-    #output = [[E for _ in range(cols)] for _ in range(rows)]
 
 
     # Process each cell in the grid
     for i in range(rows):
         for j in range(cols):
             if grid[i][j] in Wall:
+                stdscr.addstr(x + i, y + j*2, '＃', curses.color_pair(4) | curses.A_BOLD)
+            elif grid[i][j] == E:
+                stdscr.addstr(x + i, y + j*2, '・', curses.color_pair(5) | curses.A_BOLD)
+            else:
+                stdscr.addstr(x + i, y + j*2, grid[i][j])
+                
+
+'''
                 top = grid[i-1][j] if i > 0 else W
                 bottom = grid[i+1][j] if i < rows-1 else W
                 left = grid[i][j-1] if j > 0 else W
@@ -126,15 +134,7 @@ def generate_visual_2D_view(grid):
                 # EWE
                 # ?E?
                 elif top not in W and right not in W and bottom not in W and left not in W:
-                    output[i][j] = '▪'
-
+                    output[i][j] = '■'
                 else:
                     output[i][j] = '？'
-            elif grid[i][j] == E:
-                output[i][j] = '.'
-
-
-
-
-    return output
-
+'''
