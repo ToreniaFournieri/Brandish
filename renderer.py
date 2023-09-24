@@ -14,7 +14,7 @@ class Renderer:
         print(term.clear)
        
         # Show player stats and message below the maze
-        #player.display_stats(stdscr, 0, 0)
+        player.display_stats(term, 0, 0)
 
         #display_maze(maze, player.position)
         relative_view = get_relative_view(maze, player)

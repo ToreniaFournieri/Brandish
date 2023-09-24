@@ -75,7 +75,7 @@ def game():
             
 
             # Translate action into game command
-            if action == term.KEY_UP:
+            if action == 'KEY_UP':
                 if player.jump_mode:
                     logs.append(player.move("jup", maze))
                     player.jump_mode = False
