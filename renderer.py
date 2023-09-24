@@ -1,6 +1,7 @@
 import curses
 from map_master import *
-from entities import *
+from player import *
+from monster import *
 from brandish import *
 
 class Renderer:

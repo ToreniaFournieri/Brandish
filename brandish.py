@@ -1,6 +1,7 @@
 from map import *
 from map_master import *
-from entities import *
+from player import *
+from monster import *
 import curses
 from renderer import *
 
@@ -118,6 +119,11 @@ def game(stdscr):
                 maze = all_maps[player.current_map]
                 player.position = destination_position
                 logs.append("階段を登った/降った")
+        elif maze[y][x] == "🕳":
+            player.health -= 12
+            player.gold -= 1
+            #maze[y] = maze[y][:x] + "・" + maze[y][x+1:]  # Replace the gold with an empty tile
+            logs.append("🕳穴に落ちてしまった！痛い！12のダメージを受けた！💰お金を1円無くした！")
 
         for monster in monsters:
             if is_adjacent(player.position, monster.position):
