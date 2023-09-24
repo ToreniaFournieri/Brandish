@@ -21,6 +21,9 @@ def generate_visual_2D_view(stdscr, grid, x, y):
                 stdscr.addstr(x + i, y + j*2, '＃', curses.color_pair(4) | curses.A_BOLD)
             elif grid[i][j] == E:
                 stdscr.addstr(x + i, y + j*2, '・', curses.color_pair(5) | curses.A_BOLD)
+            elif grid[i][j] == "🪄":
+                stdscr.addstr(x + i, y + j*2, '🪄', curses.color_pair(4) | curses.A_BOLD)
+
             else:
                 stdscr.addstr(x + i, y + j*2, grid[i][j])
                 

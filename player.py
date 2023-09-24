@@ -1,6 +1,7 @@
 import random
 import curses
 from collections import defaultdict
+from use_items import *
 
 # Player class and any other game entities
 class Player:
@@ -21,11 +22,11 @@ class Player:
         self.right_hand = "Short sowrd"
         self.left_ring = "None"
         self.right_ring = "None"
+        self.current_map = ""
         self.inventory = defaultdict(int)  # Using defaultdict from collections module
         self.jump_mode = False
         self.display_full_map = False  # Add this outside the game loop
-        self.current_map = ""
-
+        self.directionSkillOrItem = ""
 
     def add_item(self, item_name):
         self.inventory[item_name] += 1
@@ -46,6 +47,9 @@ class Player:
                     actual_restore = min(self.max_health, potential_new_health) - self.health
                     self.health += actual_restore
                     log = f"ポーションを使い体力が{actual_restore}回復した!"
+                if item_name == "🪄衝撃の杖":
+                    directionSkillOrItem = "🪄衝撃の杖"
+                    log = f"🪄衝撃の杖を使う、どの方向に？矢印で選択"
             else:
                 log = "そのアイテムを持っていない"
         else:
@@ -57,7 +61,7 @@ class Player:
     def move(self, action, maze):
         x, y = self.position
         dx, dy = 0, 0
-        MOVEABLE_TILES = {"Ｓ","・", "％", "🚪", "🕳", "💰", "🗡", "🛡", "🍾", "💎","🔽", "🔼"} 
+        MOVEABLE_TILES = {"Ｓ","・", "％", "🚪", "🕳", "💰", "🗡","🪄", "🛡", "🍾", "💎","🔽", "🔼"} 
         text = ""
         if action == "up" and maze[y-1][x] in MOVEABLE_TILES:
             self.position = (x, y-1)

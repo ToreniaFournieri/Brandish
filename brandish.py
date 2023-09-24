@@ -56,6 +56,19 @@ def game(stdscr):
         if action == ord('z'):
             player.jump_mode = True
             continue
+
+        #
+        if player.directionSkillOrItem == "🪄衝撃の杖":
+            if action == curses.KEY_UP:
+                use_wand_of_strike(player, "up", maze, monsters)
+            elif action == curses.KEY_DOWN:
+                use_wand_of_strike(player, "down", maze, monsters)
+            elif action == curses.KEY_LEFT:
+                use_wand_of_strike(player, "left", maze, monsters)
+            elif action == curses.KEY_RIGHT:
+                use_wand_of_strike(player, "right", maze, monsters)
+            
+
         # Translate action into game command
         if action == curses.KEY_UP:
             if player.jump_mode:
@@ -90,8 +103,8 @@ def game(stdscr):
 
         elif action in [ord('P'), ord('p')]:
             break
-        elif action == ord('m'):
-            player.display_full_map = not player.display_full_map
+#        elif action == ord('m'):
+#            player.display_full_map = not player.display_full_map
 
         else:
             continue # Skip loop iteration for other keys
@@ -99,7 +112,6 @@ def game(stdscr):
         #Check the tile under the player
         x, y = player.position
         if maze[y][x] == "🍾":
-            player.add_item("🍾ポーション")
             maze[y] = maze[y][:x] + "・" + maze[y][x+1:]
             logs.append("🍾ポーションを手に入れた!")
         elif maze[y][x] == "💎":
@@ -110,6 +122,12 @@ def game(stdscr):
             player.gold += 10
             maze[y] = maze[y][:x] + "・" + maze[y][x+1:]  # Replace the gold with an empty tile
             logs.append("💰お金を10円手に入れたぞ！")
+        elif maze[y][x] == "🪄":
+            player.add_item("🪄衝撃の杖")
+            maze[y] = maze[y][:x] + "・" + maze[y][x+1:]
+            logs.append("🪄衝撃の杖を手に入れたぞ！！")
+
+
         elif maze[y][x] in ['🔼', '🔽']:
             # Check if this stair exists in the master mapping
             if (player.current_map, player.position) in stairs_master:
