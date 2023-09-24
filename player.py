@@ -48,7 +48,7 @@ class Player:
                     self.health += actual_restore
                     log = f"ポーションを使い体力が{actual_restore}回復した!"
                 if item_name == "🪄衝撃の杖":
-                    directionSkillOrItem = "🪄衝撃の杖"
+                    self.directionSkillOrItem = "🪄衝撃の杖"
                     log = f"🪄衝撃の杖を使う、どの方向に？矢印で選択"
             else:
                 log = "そのアイテムを持っていない"
@@ -61,7 +61,7 @@ class Player:
     def move(self, action, maze):
         x, y = self.position
         dx, dy = 0, 0
-        MOVEABLE_TILES = {"Ｓ","・", "％", "🚪", "🕳", "💰", "🗡","🪄", "🛡", "🍾", "💎","🔽", "🔼"} 
+        MOVEABLE_TILES = {"Ｓ","・","、", "％", "🚪", "🕳", "💰", "🗡","🪄", "🛡", "🍾", "💎","🔽", "🔼"} 
         text = ""
         if action == "up" and maze[y-1][x] in MOVEABLE_TILES:
             self.position = (x, y-1)
@@ -89,42 +89,4 @@ class Player:
         return text
 
 
-    def display_stats(self, term, start_y, start_x):
-        # Define colors
-        health_style = term.white_on_green
-        mana_style = term.white_on_cyan
-
-
-        print(term.move(start_y, start_x) + f"{self.name}")
-
-        # Display Health
-        health_text = f"体力: {self.health}/{self.max_health}".ljust(20)
-        filled_length = int(20 * (self.health / self.max_health))
-
-        for i, char in enumerate(health_text):
-            if i < filled_length:
-                print(term.move(start_y+1, start_x + i) + health_style(char))
-            else:
-                print(term.move(start_y+1, start_x + i) + char)
-
-        # Display Mana
-        mana_text = f"気力: {self.mana}/{self.max_mana}".ljust(20)
-        filled_length = int(20 * (self.mana / self.max_mana))
-
-        for i, char in enumerate(mana_text):
-            if i < filled_length:
-                print(term.move(start_y+2, start_x + i) + mana_style(char))
-                #stdscr.addstr(start_y + 2, start_x + i, char, curses.color_pair(3) | curses.A_BOLD)
-            else:
-                print(term.move(start_y+2, start_x + i) + char)
-                #stdscr.addstr(start_y + 2, start_x + i, char, curses.A_BOLD)
-
-        # Other stats
-        print(term.move(start_y + 3, start_x) + f"攻撃力: {self.attack_power}".ljust(20))
-        print(term.move(start_y + 4, start_x) + f"防御力: {self.defense}".ljust(20))
-        print(term.move(start_y + 5, start_x) + " ".ljust(20))  # Empty line
-        print(term.move(start_y + 6, start_x) + f"レベル: {self.level}".ljust(20))
-        print(term.move(start_y + 7, start_x) + f"お金: {self.gold}円".ljust(20))
-        print(term.move(start_y + 8, start_x) + f"位置: {self.position}".ljust(20))
-    
 

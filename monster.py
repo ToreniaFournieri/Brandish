@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import random
 import curses
 from collections import defaultdict
@@ -5,7 +6,7 @@ from player import *
 
 class Monster:
     def __init__(self, name, health, attack_power, defense, experience_point, position):
-        self.name = name
+        self.name = str(name)
         self.max_health = health
         self.health = health
         self.attack_power = attack_power
@@ -13,6 +14,8 @@ class Monster:
         self.experience_point = experience_point
         self.position = position
         self.isAdjacent = False
+        self.isInSight = False
+        self.distance = None
 
 def roll_dice(dice_notation):
     """
@@ -26,6 +29,16 @@ def is_adjacent(pos1, pos2):
     x1, y1 = pos1
     x2, y2 = pos2
     return abs(x1 - x2) <= 1 and abs(y1 - y2) <= 1 and (x1 != x2 or y1 != y2)
+
+def is_in_sight(pos1, pos2, distance=10):
+    x1, y1 = pos1
+    x2, y2 = pos2
+    return abs(x1 - x2) <= distance and abs(y1 - y2) <= distance
+
+def calculate_distance(pos1, pos2):
+    x1, y1 = pos1
+    x2, y2 = pos2
+    return ((x2 - x1)**2 + (y2 - y1)**2)**0.5
 
 
 class Battle:

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import blessed
 from map import *
 from map_master import *
@@ -48,12 +49,12 @@ def game():
             #action = stdscr.getch()
             # Get user input
             key_to_inventory_index = {
-                ord('a'): 0 if len(player.inventory) > 0 else None,
-                ord('s'): 1 if len(player.inventory) > 1 else None,
-                ord('d'): 1 if len(player.inventory) > 2 else None,
-                ord('f'): 1 if len(player.inventory) > 3 else None,
-                ord('g'): 1 if len(player.inventory) > 4 else None,
-                ord('h'): 1 if len(player.inventory) > 5 else None,
+                'a': 0 if len(player.inventory) > 0 else None,
+                's': 1 if len(player.inventory) > 1 else None,
+                'd': 1 if len(player.inventory) > 2 else None,
+                'f': 1 if len(player.inventory) > 3 else None,
+                'g': 1 if len(player.inventory) > 4 else None,
+                'h': 1 if len(player.inventory) > 5 else None,
                 # ... and so on, but make sure to check if the item exists before accessing!
             }
 
@@ -64,14 +65,22 @@ def game():
 
             #
             if player.directionSkillOrItem == "🪄衝撃の杖":
-                if action == term.KEY_UP:
+                if action == '\x1b[A':
                     use_wand_of_strike(player, "up", maze, monsters)
-                elif action == term.KEY_DOWN:
+                    player.directionSkillOrItem = False
+                    continue
+                elif action == '\x1b[B':
                     use_wand_of_strike(player, "down", maze, monsters)
-                elif action == term.KEY_LEFT:
-                    use_wand_of_strike(player, "left", maze, monsters)
-                elif action == term.KEY_RIGHT:
+                    player.directionSkillOrItem = False
+                    continue
+                elif action == '\x1b[C':
                     use_wand_of_strike(player, "right", maze, monsters)
+                    player.directionSkillOrItem = False
+                    continue
+                elif action == '\x1b[D':
+                    use_wand_of_strike(player, "left", maze, monsters)
+                    player.directionSkillOrItem = False
+                    continue
             
 
             # Translate action into game command
@@ -87,18 +96,18 @@ def game():
                     player.jump_mode = False
                 else:
                     player.move("down", maze)
-            elif action == '\x1b[D':
-                if player.jump_mode:
-                    player.move("jleft", maze)
-                    player.jump_mode = False
-                else:
-                    player.move("left", maze)
             elif action == '\x1b[C':
                 if player.jump_mode:
                     player.move("jright", maze)
                     player.jump_mode = False
                 else:
                     player.move("right", maze)
+            elif action == '\x1b[D':
+                if player.jump_mode:
+                    player.move("jleft", maze)
+                    player.jump_mode = False
+                else:
+                    player.move("left", maze)
             elif action in ['.']:
                 pass
                 #one turn rest.
@@ -118,10 +127,11 @@ def game():
             #Check the tile under the player
             x, y = player.position
             if maze[y][x] == "🍾":
+                player.add_item("🍾ポーション")
                 maze[y] = maze[y][:x] + "・" + maze[y][x+1:]
                 logs.append("🍾ポーションを手に入れた!")
             elif maze[y][x] == "💎":
-                player.inventory["💎黄色の宝石"] += 1
+                player.inventory["💎黄色の宝石"]
                 maze[y] = maze[y][:x] + "・" + maze[y][x+1:]
                 logs.append("💎黄色の宝石を拾った!")
             elif maze[y][x] == "💰":
@@ -129,6 +139,11 @@ def game():
                 maze[y] = maze[y][:x] + "・" + maze[y][x+1:]  # Replace the gold with an empty tile
                 logs.append("💰お金を10円手に入れたぞ！")
             elif maze[y][x] == "🪄":
+                player.add_item("🪄衝撃の杖")
+                player.add_item("🪄衝撃の杖")
+                player.add_item("🪄衝撃の杖")
+                player.add_item("🪄衝撃の杖")
+                player.add_item("🪄衝撃の杖")
                 player.add_item("🪄衝撃の杖")
                 maze[y] = maze[y][:x] + "・" + maze[y][x+1:]
                 logs.append("🪄衝撃の杖を手に入れたぞ！！")
@@ -150,6 +165,13 @@ def game():
                 logs.append("🕳穴に落ちてしまった！痛い！12のダメージを受けた！💰お金を1円無くした！")
 
             for monster in monsters:
+                if is_in_sight(player.position, monster.position):
+                    monster.distance = calculate_distance(player.position, monster.position)
+                    monster.isInSight =True
+                else:
+                    monster.distance = 100 # far away 
+                    monster.isInSight =False
+                    
                 if is_adjacent(player.position, monster.position):
                     monster.isAdjacent = True
                     battle = Battle(player, monster)

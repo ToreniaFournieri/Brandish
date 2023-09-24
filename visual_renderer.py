@@ -123,9 +123,9 @@ def generate_visual_2D_view(term, grid, x, y):
                     print(term.move(x + i, y + j*2) + wall_style('■ '))  
 
             elif grid[i][j] == E:
-                print(term.move(x + i, y + j*2) + '・')
+                print(term.move(x + i, y + j*2) + term.normal + '・')
             else:
-                print(term.move(x + i, y + j*2) + grid[i][j])
+                print(term.move(x + i, y + j*2) + term.normal + grid[i][j])
 
 '''
             if grid[i][j] in Wall:

@@ -3,6 +3,11 @@ from map_master import *
 from player import *
 from monster import *
 from brandish import *
+from wcwidth import wcswidth
+
+def ljust_for_display(s, width):
+    """Left-justify string `s` to a display width of `width`."""
+    return s + ' ' * (width - wcswidth(s))
 
 class Renderer:
     def __init__(self):
@@ -14,7 +19,47 @@ class Renderer:
         print(term.clear)
        
         # Show player stats and message below the maze
-        player.display_stats(term, 0, 0)
+        start_y = 0
+        start_x = 0
+        # Define colors
+        health_style = term.white_on_green
+        mana_style = term.white_on_cyan
+
+        print(term.move(start_y, start_x) + f"{player.name}")
+
+        # Display Health
+        health_text = f"体力: {player.health}/{player.max_health}".ljust(20)
+        filled_length = int(20 * (player.health / player.max_health))
+
+        current_pos = start_x  # Initialize the position counter
+        for char in health_text:
+            if current_pos < start_x + filled_length:
+                print(term.move(start_y + 1, current_pos) + health_style(char) + char, end='')
+            else:
+                print(term.move(start_y + 1, current_pos) + char, end='')
+            current_pos += wcswidth(char)
+
+        # Display Mana
+        mana_text = f"気力: {player.mana}/{player.max_mana}".ljust(20)
+        filled_length = int(20 * (player.mana / player.max_mana))
+
+        current_pos = start_x  # Reset the position counter for the mana display
+        for char in mana_text:
+            if current_pos < start_x + filled_length:
+                print(term.move(start_y + 2, current_pos) + mana_style(char) + char, end='')
+            else:
+                print(term.move(start_y + 2, current_pos) + char, end='')
+            current_pos += wcswidth(char)
+
+
+        # Other stats
+        print(term.move(start_y + 3, start_x) + f"攻撃力: {player.attack_power}".ljust(20))
+        print(term.move(start_y + 4, start_x) + f"防御力: {player.defense}".ljust(20))
+        print(term.move(start_y + 5, start_x) + " ".ljust(20))  # Empty line
+        print(term.move(start_y + 6, start_x) + f"レベル: {player.level}".ljust(20))
+        print(term.move(start_y + 7, start_x) + f"お金: {player.gold}円".ljust(20))
+        print(term.move(start_y + 8, start_x) + f"位置: {player.position}".ljust(20))
+    
 
         #display_maze(maze, player.position)
         relative_view = get_relative_view(maze, player)
@@ -22,27 +67,37 @@ class Renderer:
         # Display the player's relative view of the maze
 
         monsterLine = 12
-        for monster in monsters:
-            if monster.isAdjacent:
-                filled_length = int(20 * (monster.health / monster.max_health))
-                unfilled_length = 20 - filled_length
-    
-                filled_segment = " " * filled_length
-                unfilled_segment = " " * unfilled_length
+        # Sort the monsters by distance from the player
+        visible_monsters = [monster for monster in monsters if monster.isInSight]
+        sorted_monsters = sorted(visible_monsters, key=lambda monster: monster.distance)
 
-                health_text = f"{monster.name} {monster.health}/{monster.max_health}".ljust(20)
+        # Display only the first 5 monsters from the sorted list
+        for monster in sorted_monsters[:5]:
+            filled_length = int(20 * (monster.health / monster.max_health))
+            unfilled_length = 20 - filled_length
 
-                blue_on_black = term.color(4) + term.on_color(0)
-                bold_blue_on_black = term.bold + blue_on_black
-                for i, char in enumerate(health_text):
-                    if i < filled_length:
-                        print(term.move_xy(0 + i, monsterLine) + bold_blue_on_black + char, end='')
-                    else:
-                        print(term.move_xy(0 + i, monsterLine) + blue_on_black + char, end='')
+            filled_segment = " " * filled_length
+            unfilled_segment = " " * unfilled_length
 
-                monsterLine += 1
+            health_text = ljust_for_display(f"{monster.name} {monster.health}/{monster.max_health}", 20)
 
-        print(term.move(0, 26) + f"{player.current_map}")
+            # Determine the style based on the isAdjacent attribute
+            style = term.bold if monster.isAdjacent else term.normal
+            white_on_magenta = style + term.color(7) + term.on_color(5)
+
+            current_pos = 0
+            for char in health_text:
+                if current_pos < filled_length:
+                    print(term.move_xy(current_pos, monsterLine) + white_on_magenta + char, end='')
+                else:
+                    print(term.move_xy(current_pos, monsterLine) + term.normal + style + char, end='')
+                current_pos += wcswidth(char)
+
+            monsterLine += 1
+
+
+
+        print(term.move(0, 26) + term.normal + f"{player.current_map}")
         #stdscr.addstr(0, 26, f"{player.current_map}")
         generate_visual_2D_view(term, view_display, 1,26)
  
@@ -57,18 +112,15 @@ class Renderer:
             logs.append(f"{player.name}は死んでしまった！おしまい")
             return False
 
+        # Keep only the latest 5 logs
+        while len(logs) > 5:
+            logs.pop(0)
+
         pos = 0
-        for log in logs:
-            #stdscr.addstr(18 + 6 + pos, 0, f"{log}")
-            print(term.move(24 + pos, 0) +  f"{log}")
+        for log in reversed(logs):
+            print(term.move(24 + pos, 0) + term.clear_eol + f"{log}")
             pos += 1
 
-
-        #stdscr.refresh()
-
-        # Keep only the latest 5 logs
-        if len(logs) > 5:
-            logs.pop(0)
 
         print(term.move(0, 70) + "装備")
         print(term.move(1, 70) + f"左手: {player.left_hand}")

@@ -1,3 +1,4 @@
+import random
 
 
 def use_wand_of_strike(player, direction, maze, monsters):
@@ -22,15 +23,16 @@ def use_wand_of_strike(player, direction, maze, monsters):
         # Check for monsters and deal damage
         for monster in monsters:
             if monster.position == (x, y):
-                damage = random.randint(50, 50)  # 1d10 damage
+                damage = random.randint(1, 10)  # 1d10 damage
                 monster.health -= damage
                 if monster.health <= 0:
                     pass # remove the monster, add death logic, etc.
 
         # Change the tile texture
         if maze[y][x] == "・":
-            maze[y][x] = "、"
+            maze[y] = maze[y][:x] + "、" + maze[y][x+1:]
 
         # Stop the shockwave if it hits a wall or goes out of bounds
         if maze[y][x] == "＃":
             break
+
