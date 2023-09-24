@@ -89,13 +89,13 @@ class Player:
         return text
 
 
-    def display_stats(self, stdscr, start_y, start_x):
+    def display_stats(self, term, start_y, start_x):
         # Define colors
-        curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_GREEN)  # Blue on Black for player
-        curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_CYAN)  # Blue on Black for player
+        health_style = term.white_on_green
+        mana_style = term.white_on_cyan
 
 
-        stdscr.addstr(start_y, start_x, f"{self.name}")
+        print(term.move(start_y, start_x) + f"{self.name}")
 
         # Display Health
         health_text = f"体力: {self.health}/{self.max_health}".ljust(20)
@@ -103,7 +103,7 @@ class Player:
 
         for i, char in enumerate(health_text):
             if i < filled_length:
-                stdscr.addstr(start_y+1, start_x + i, char, curses.color_pair(2) | curses.A_BOLD)
+                print(term.move(start_y+1, start_x + i) + health_style(char)
             else:
                 stdscr.addstr(start_y+1, start_x + i, char, curses.A_BOLD)
 
@@ -118,11 +118,11 @@ class Player:
                 stdscr.addstr(start_y + 2, start_x + i, char, curses.A_BOLD)
 
         # Other stats
-        stdscr.addstr(start_y + 3, start_x, f"攻撃力: {self.attack_power}".ljust(20))
-        stdscr.addstr(start_y + 4, start_x, f"防御力: {self.defense}".ljust(20))
-        stdscr.addstr(start_y + 5, start_x, " ".ljust(20))  # Empty line
-        stdscr.addstr(start_y + 6, start_x, f"レベル: {self.level}".ljust(20))
-        stdscr.addstr(start_y + 7, start_x, f"お金: {self.gold}円".ljust(20))
-        stdscr.addstr(start_y + 8, start_x, f"位置: {self.position}".ljust(20))
+        print(term.move(start_y + 3, start_x) + f"攻撃力: {self.attack_power}".ljust(20))
+        print(term.move(start_y + 4, start_x) + f"防御力: {self.defense}".ljust(20))
+        print(term.move(start_y + 5, start_x) + " ".ljust(20))  # Empty line
+        print(term.move(start_y + 6, start_x) + f"レベル: {self.level}".ljust(20))
+        print(term.move(start_y + 7, start_x) + f"お金: {self.gold}円".ljust(20))
+        print(term.move(start_y + 8, start_x) + f"位置: {self.position}".ljust(20))
     
 

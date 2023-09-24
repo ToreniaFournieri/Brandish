@@ -1,21 +1,20 @@
-import curses
+import blessed
 from map_master import *
 from player import *
 from monster import *
 from brandish import *
 
 class Renderer:
-    def __init__(self, stdscr):
-        self.stdscr = stdscr
-
+    def __init__(self):
+        pass
     
 
-    def render(self,stdscr, player, maze, logs, monsters):
-            # Use curses to display
-        stdscr.clear()
+    def render(self,term, player, maze, logs, monsters):
+        # Clear screen
+        print(term.clear)
        
         # Show player stats and message below the maze
-        player.display_stats(stdscr, 0, 0)
+        #player.display_stats(stdscr, 0, 0)
 
         #display_maze(maze, player.position)
         relative_view = get_relative_view(maze, player)
@@ -40,13 +39,12 @@ class Renderer:
                         stdscr.addstr(monsterLine, 0 + i, char, curses.A_BOLD)
                 monsterLine += 1
 
-        stdscr.addstr(0, 26, f"{player.current_map}")
-        generate_visual_2D_view(stdscr, view_display, 1,26)
-        #visual_maze = generate_visual_2D_view(view_display)
-        #for idx, row in enumerate(visual_maze):
-        #    stdscr.addstr(idx +1, 26, ''.join(map(str, row)))
-
-        stdscr.addstr(18+ 5, 0, "方向キーで移動, Pでやめる: ")
+        print(term.move(0, 26) + f"{player.current_map}")
+        #stdscr.addstr(0, 26, f"{player.current_map}")
+        generate_visual_2D_view(term, view_display, 1,26)
+ 
+        print(term.move(23, 0) + "方向キーで移動, Pでやめる: ")
+        #stdscr.addstr(18+ 5, 0, "方向キーで移動, Pでやめる: ")
 
         # Check for game over
         if maze[player.position[1]][player.position[0]] == "E":
@@ -58,42 +56,39 @@ class Renderer:
 
         pos = 0
         for log in logs:
-            stdscr.addstr(18 + 6 + pos, 0, f"{log}")
+            #stdscr.addstr(18 + 6 + pos, 0, f"{log}")
+            print(term.move(24 + pos, 0) +  f"{log}")
             pos += 1
 
 
-        stdscr.refresh()
+        #stdscr.refresh()
 
         # Keep only the latest 5 logs
         if len(logs) > 5:
             logs.pop(0)
 
-        stdscr.addstr(0, 70, f"装備")
-        stdscr.addstr(1, 70, f"左手: {player.left_hand}")
-        stdscr.addstr(2, 70, f"鎧: {player.armour}")
-        stdscr.addstr(3, 70, f"右手: {player.right_hand}")
+        print(term.move(0, 70) + "装備")
+        print(term.move(1, 70) + f"左手: {player.left_hand}")
+        print(term.move(2, 70) + f"鎧: {player.armour}")
+        print(term.move(3, 70) + f"右手: {player.right_hand}")
 
-        stdscr.addstr(5, 70, f"左指輪: {player.left_ring}")
-        stdscr.addstr(6, 70, f"右指輪: {player.right_ring}")
+        print(term.move(5, 70) + f"左指輪: {player.left_ring}")
+        print(term.move(6, 70) + f"右指輪: {player.right_ring}")
 
-        stdscr.addstr(0, 90, f"スキル")
-        stdscr.addstr(1, 90, f"z: ジャンプ {player.jump_mode}")
-        stdscr.addstr(2, 90, f"m: 大きい地図表示 {player.display_full_map}")
-
+        print(term.move(0, 90) + "スキル")
+        print(term.move(1, 90) + f"z: ジャンプ {player.jump_mode}")
         # Display inventory somewhere on the screen
         inventory_display_position = (8, 70)  # Or wherever you want it
-        stdscr.addstr(inventory_display_position[0], inventory_display_position[1], "アイテム:")
+        print(term.move(inventory_display_position[0], inventory_display_position[1]) + "アイテム:")
         shortcut_keys = ['a', 's', 'd', 'f', 'g', 'h']  # ... extend this list if needed
         for idx, (item, count) in enumerate(player.inventory.items()):
-            stdscr.addstr(inventory_display_position[0] + idx + 1, inventory_display_position[1], f"{shortcut_keys[idx]}: {item}: {count}")
+            print(term.move(inventory_display_position[0] + idx + 1, inventory_display_position[1]) + f"{shortcut_keys[idx]}: {item}: {count}")
 
         # Then, conditionally display the map:
         if player.display_full_map:
             for idx, row in enumerate(maze):
                 for jdx, cell in enumerate(row):
                     if (jdx, idx) == player.position:
-                        stdscr.addstr(idx, jdx +18, "🚶")  # Display player with '@' character
+                        print(term.move(idx, jdx + 18) + "🚶")  # Display player with '🚶' character
                     else:
-                        stdscr.addstr(idx, jdx + 18, cell)
-                
-
+                        print(term.move(idx, jdx + 18) + cell)
