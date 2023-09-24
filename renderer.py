@@ -32,11 +32,14 @@ class Renderer:
 
                 health_text = f"{monster.name} {monster.health}/{monster.max_health}".ljust(20)
 
+                blue_on_black = term.color(4) + term.on_color(0)
+                bold_blue_on_black = term.bold + blue_on_black
                 for i, char in enumerate(health_text):
                     if i < filled_length:
-                        stdscr.addstr(monsterLine, 0 + i, char, curses.color_pair(1) | curses.A_BOLD)
+                        print(term.move_xy(0 + i, monsterLine) + bold_blue_on_black + char, end='')
                     else:
-                        stdscr.addstr(monsterLine, 0 + i, char, curses.A_BOLD)
+                        print(term.move_xy(0 + i, monsterLine) + blue_on_black + char, end='')
+
                 monsterLine += 1
 
         print(term.move(0, 26) + f"{player.current_map}")

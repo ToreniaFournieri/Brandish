@@ -8,7 +8,7 @@ from renderer import *
 term = blessed.Terminal()
 
 def game():
-    with term.fullscreen():
+    with term.cbreak(), term.hidden_cursor():
     # Set up curses settings
     #    curses.curs_set(0)  # hide cursor
     #    stdscr.keypad(1)    # enable special keys
@@ -75,25 +75,25 @@ def game():
             
 
             # Translate action into game command
-            if action == 'KEY_UP':
+            if action == '\x1b[A':
                 if player.jump_mode:
                     logs.append(player.move("jup", maze))
                     player.jump_mode = False
                 else:
                     player.move("up", maze)
-            elif action == term.KEY_DOWN:
+            elif action == '\x1b[B':
                 if player.jump_mode:
                     player.move("jdown", maze)
                     player.jump_mode = False
                 else:
                     player.move("down", maze)
-            elif action == term.KEY_LEFT:
+            elif action == '\x1b[D':
                 if player.jump_mode:
                     player.move("jleft", maze)
                     player.jump_mode = False
                 else:
                     player.move("left", maze)
-            elif action == term.KEY_RIGHT:
+            elif action == '\x1b[C':
                 if player.jump_mode:
                     player.move("jright", maze)
                     player.jump_mode = False
@@ -107,6 +107,7 @@ def game():
                 logs.append(player.use_item(item_index))
 
             elif action in ['P', 'p', term.KEY_ESCAPE]:
+                print(term.clear)            
                 break
     #        elif action == ord('m'):
     #            player.display_full_map = not player.display_full_map
