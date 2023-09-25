@@ -10,15 +10,6 @@ term = blessed.Terminal()
 
 def game():
     with term.cbreak(), term.hidden_cursor():
-    # Set up curses settings
-    #    curses.curs_set(0)  # hide cursor
-    #    stdscr.keypad(1)    # enable special keys
-    #    stdscr.timeout(100) # set getch() non-blocking
-    #    curses.start_color()
-    #    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_MAGENTA)  # Foreground: White, Background: Blue for current health
-    #    curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_WHITE)
-    #    curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_BLACK)
-    #    renderer = Renderer(stdscr)
         # Generate the maze and find the starting position
         global maze    
         maze = Cave_map1
@@ -32,7 +23,6 @@ def game():
                 if cell == "🐀":
                     monster = Monster("🐀大鼠",40,"1d3",0,2,position=(x, y))  # Assuming Monster class has a position attribute
                     monsters.append(monster)
-                    #maze[y][x] = "M"  # This can be changed based on how you want to represent monsters in the maze
 
         renderer = Renderer()
         logs = []
@@ -45,8 +35,7 @@ def game():
             print(term.clear)
             renderer.render(term, player , maze, logs, monsters)
             action = term.inkey()
-            # Get user input with curses
-            #action = stdscr.getch()
+
             # Get user input
             key_to_inventory_index = {
                 'a': 0 if len(player.inventory) > 0 else None,
@@ -58,12 +47,10 @@ def game():
                 # ... and so on, but make sure to check if the item exists before accessing!
             }
 
-            # If 'j' is pressed, set jump_mode to True
             if action == 'z':
                 player.jump_mode = True
                 continue
 
-            #
             if player.directionSkillOrItem == "🪄衝撃の杖":
                 if action == '\x1b[A':
                     use_wand_of_strike(player, "up", maze, monsters)
@@ -89,25 +76,25 @@ def game():
                     logs.append(player.move("jup", maze))
                     player.jump_mode = False
                 else:
-                    player.move("up", maze)
+                    logs.append(player.move("up", maze))
             elif action == '\x1b[B':
                 if player.jump_mode:
-                    player.move("jdown", maze)
+                    logs.append(player.move("jdown", maze))
                     player.jump_mode = False
                 else:
-                    player.move("down", maze)
+                    logs.append(player.move("down", maze))
             elif action == '\x1b[C':
                 if player.jump_mode:
-                    player.move("jright", maze)
+                    logs.append(player.move("jright", maze))
                     player.jump_mode = False
                 else:
-                    player.move("right", maze)
+                    logs.append(player.move("right", maze))
             elif action == '\x1b[D':
                 if player.jump_mode:
-                    player.move("jleft", maze)
+                    logs.append(player.move("jleft", maze))
                     player.jump_mode = False
                 else:
-                    player.move("left", maze)
+                    logs.append(player.move("left", maze))
             elif action in ['.']:
                 pass
                 #one turn rest.
@@ -118,8 +105,6 @@ def game():
             elif action in ['P', 'p', term.KEY_ESCAPE]:
                 print(term.clear)            
                 break
-    #        elif action == ord('m'):
-    #            player.display_full_map = not player.display_full_map
 
             else:
                 continue # Skip loop iteration for other keys
@@ -147,7 +132,7 @@ def game():
                 player.add_item("🪄衝撃の杖")
                 maze[y] = maze[y][:x] + "・" + maze[y][x+1:]
                 logs.append("🪄衝撃の杖を手に入れたぞ！！")
-
+        
 
             elif maze[y][x] in ['🔼', '🔽']:
                 # Check if this stair exists in the master mapping

@@ -83,3 +83,6 @@ class Battle:
 
 
         return f"{self.player.name}は {self.monster.name}に{player_damage}のダメージを与え,{monster_damage}ダメージ受けた"
+
+
+

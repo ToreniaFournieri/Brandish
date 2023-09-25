@@ -23,7 +23,7 @@ def use_wand_of_strike(player, direction, maze, monsters):
         # Check for monsters and deal damage
         for monster in monsters:
             if monster.position == (x, y):
-                damage = random.randint(1, 10)  # 1d10 damage
+                damage = random.randint(1, 10) + random.randint(1, 10) + random.randint(1, 10)  # 3d10 damage
                 monster.health -= damage
                 if monster.health <= 0:
                     pass # remove the monster, add death logic, etc.

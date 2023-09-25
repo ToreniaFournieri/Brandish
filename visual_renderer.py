@@ -13,7 +13,6 @@ def generate_visual_2D_view(term, grid, x, y):
 
     # For the colors, you can use the following approach:
     wall_style = term.black_on_white
-    #empty_style = term.black_on_black
 
     # Process each cell in the grid
     for i in range(rows):
