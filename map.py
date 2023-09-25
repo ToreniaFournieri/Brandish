@@ -2,20 +2,7 @@ import random
 import os
 from visual_renderer import *
 
-def display_maze(maze, player_position):
-    for y, row in enumerate(maze):
-        display_row = []
-        for x, cell in enumerate(row):
-            if (x, y) == player_position:
-                display_row.append("P")  # Representing the player with "P"
-            else:
-                if cell == 0:
-                    display_row.append(".")
-                elif cell == 1:
-                    display_row.append("#")
-                else:
-                    display_row.append(cell)
-        print(''.join(display_row))
+
 
 
 def pad_relative_view(view, up, down, left, right):

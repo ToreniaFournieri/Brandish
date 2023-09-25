@@ -63,7 +63,7 @@ class Renderer:
 
         #display_maze(maze, player.position)
         relative_view = get_relative_view(maze, player)
-        view_display = [''.join(["＃" if cell == 1 else " " if cell == 0 else cell for cell in row]) for row in relative_view]
+        view_display = [''.join(["　" if cell == 1 else " " if cell == 0 else cell for cell in row]) for row in relative_view]
         # Display the player's relative view of the maze
 
         monsterLine = 12
