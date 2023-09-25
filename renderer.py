@@ -105,10 +105,7 @@ class Renderer:
         #stdscr.addstr(18+ 5, 0, "方向キーで移動, Pでやめる: ")
 
         # Check for game over
-        if maze[player.position[1]][player.position[0]] == "E":
-            logs.append("おめでとう！ゲームクリア")
-            return False
-        elif player.isDead:
+        if  player.isDead:
             logs.append(f"{player.name}は死んでしまった！おしまい")
             return False
 
