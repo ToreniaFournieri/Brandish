@@ -128,7 +128,8 @@ class Renderer:
         print(term.move(6, 70) + f"右指輪: {player.right_ring}")
 
         print(term.move(0, 90) + "スキル")
-        print(term.move(1, 90) + f"z: ジャンプ {player.jump_mode}")
+        print(term.move(1, 90) + f"z: ジャンプ")
+        print(term.move(2, 90) + f"x: 引き寄せの術")
         # Display inventory somewhere on the screen
         inventory_display_position = (8, 70)  # Or wherever you want it
         print(term.move(inventory_display_position[0], inventory_display_position[1]) + "アイテム:")
@@ -144,3 +145,5 @@ class Renderer:
                         print(term.move(idx, jdx + 18) + "🚶")  # Display player with '🚶' character
                     else:
                         print(term.move(idx, jdx + 18) + cell)
+
+        print(term.move(30, 0))  # Move the cursor to line 30 (or any other desired line)

@@ -25,7 +25,6 @@ class Player:
         self.right_ring = "None"
         self.current_map = ""
         self.inventory = defaultdict(int)  # Using defaultdict from collections module
-        self.jump_mode = False
         self.display_full_map = False  # Add this outside the game loop
         self.directionSkillOrItem = ""
 
@@ -94,6 +93,41 @@ class Player:
         #Faild to move the lock
         return False
 
+    def snatch_object(self, direction, maze):
+        log = ""
+        # Define movement deltas
+        dx, dy = 0, 0
+        if direction == "up":
+            dx, dy = 0, -1
+        elif direction == "down":
+            dx, dy = 0, 1
+        elif direction == "left":
+            dx, dy = -1, 0
+        elif direction == "right":
+            dx, dy = 1, 0
+
+        x, y = self.position
+
+        # Check each tile in the direction up to 5 tiles away
+        for i in range(1, 6):
+            target_x, target_y = x + i * dx, y + i * dy
+        
+            # Check if we're out of bounds
+            if target_x < 0 or target_y < 0 or target_x >= len(maze[0]) or target_y >= len(maze):
+                break
+        
+            # Check if the tile contains the object (rock)
+            target =maze[target_y][target_x]
+            if target not in {"・", "、"}:
+                # Move the object to the tile next to the player
+                maze[target_y] = maze[target_y][:target_x] + "・" + maze[target_y][target_x+1:]
+                maze[y + dy] = maze[y + dy][:x + dx] + target + maze[y + dy][x + dx + 1:]
+                log = f"{maze[target_y][target_x]}　を引き寄せた"
+                break
+
+        return log
+
+
     def move(self, action, maze):
         x, y = self.position
         dx, dy = 0, 0
@@ -102,7 +136,7 @@ class Player:
         MOVEABLE_TILES = {"Ｓ","・","、", "％", "🚪", "🕳", "💰", "🗡","🪄", "🛡", "🍾", "💎","🔽", "🔼", "🪨"}
 
         text = ""
-        if action == "up" and maze[y-1][x] in MOVEABLE_TILES:
+        if action == "up" and y-1 >= 0 and maze[y-1][x] in MOVEABLE_TILES:  # Added boundary check
             if maze[y-1][x] == "🪨":
                 if self.move_rock((x, y-1), action, maze):
                     self.position = (x, y-1)                    
@@ -110,10 +144,10 @@ class Player:
                     return "岩を動かせられない！"
             else:
                 self.position = (x, y-1)
-        elif action == "jup" and maze[y-2][x] in MOVEABLE_TILES:
+        elif action == "jup" and y-2 >= 0 and maze[y-2][x] in MOVEABLE_TILES:
             self.position = (x, y-2)
 
-        elif action == "down" and maze[y+1][x] in MOVEABLE_TILES:
+        elif action == "down" and y+1 < len(maze) and maze[y+1][x] in MOVEABLE_TILES:
             if maze[y+1][x] == "🪨":
                 if self.move_rock((x, y+1), action, maze):
                     self.position = (x, y+1)
@@ -121,10 +155,10 @@ class Player:
                     return "岩を動かせられない！"
             else:
                 self.position = (x, y+1)
-        elif action == "jdown" and maze[y+2][x] in MOVEABLE_TILES:
+        elif action == "jdown" and y+2 < len(maze) and maze[y+2][x] in MOVEABLE_TILES:
             self.position = (x, y+2)
 
-        elif action == "right" and maze[y][x+1] in MOVEABLE_TILES:
+        elif action == "right" and x+1 < len(maze[0]) and maze[y][x+1] in MOVEABLE_TILES:  # Added boundary check
             if maze[y][x+1] == "🪨":
                 if self.move_rock((x+1, y), action, maze):
                     self.position = (x+1, y)
@@ -132,10 +166,10 @@ class Player:
                     return "岩を動かせられない！"
             else:
                 self.position = (x+1, y)
-        elif action == "jright" and maze[y][x+2] in MOVEABLE_TILES:
+        elif action == "jright" and x+2 < len(maze[0]) and maze[y][x+2] in MOVEABLE_TILES:
             self.position = (x+2, y)
 
-        elif action == "left" and maze[y][x-1] in MOVEABLE_TILES:
+        elif action == "left" and x-1 >= 0 and maze[y][x-1] and maze[y][x-1] in MOVEABLE_TILES:
             if maze[y][x-1] == "🪨":
                 if self.move_rock((x-1, y), action, maze):
                     self.position = (x-1, y)
@@ -143,7 +177,7 @@ class Player:
                     return "岩を動かせられない！"
             else:
                 self.position = (x-1, y)
-        elif action == "jleft" and maze[y][x-2] in MOVEABLE_TILES:
+        elif action == "jleft" and x-2 >= 0 and maze[y][x-1] and maze[y][x-2] in MOVEABLE_TILES:
             self.position = (x-2, y)
 
         else:

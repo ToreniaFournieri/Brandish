@@ -47,9 +47,43 @@ def game():
                 # ... and so on, but make sure to check if the item exists before accessing!
             }
 
+            #JUMP
             if action == 'z':
-                player.jump_mode = True
+                action = term.inkey()
+                if action == '\x1b[A':
+                        logs.append(player.move("jup", maze))
+                elif action == '\x1b[B':
+                        logs.append(player.move("jdown", maze))
+                elif action == '\x1b[C':
+                        logs.append(player.move("jright", maze))
+                elif action == '\x1b[D':
+                        logs.append(player.move("jleft", maze))
                 continue
+
+            #Snatch
+            black_on_white = term.color(0) + term.on_color(7)
+
+            if action == 'x':
+                print(term.move(23, 0) + black_on_white + "どの方向のものを呼び寄せる？(方向キーで選択)" + term.normal)
+
+                action = term.inkey()                
+                if action == '\x1b[A':  # Up arrow
+                    player.snatch_object("up", maze)
+                    continue
+                elif action == '\x1b[B':  # Down arrow
+                    player.snatch_object("down", maze)
+                    continue
+                elif action == '\x1b[C':  # Right arrow
+                    player.snatch_object("right", maze)
+                    continue
+                elif action == '\x1b[D':  # Left arrow
+                    player.snatch_object("left", maze)
+                    continue
+                else:
+                    logs.append("その方向は有効じゃない")
+
+                continue
+
 
             if player.directionSkillOrItem == "🪄衝撃の杖":
                 if action == '\x1b[A':
@@ -72,28 +106,12 @@ def game():
 
             # Translate action into game command
             if action == '\x1b[A':
-                if player.jump_mode:
-                    logs.append(player.move("jup", maze))
-                    player.jump_mode = False
-                else:
                     logs.append(player.move("up", maze))
             elif action == '\x1b[B':
-                if player.jump_mode:
-                    logs.append(player.move("jdown", maze))
-                    player.jump_mode = False
-                else:
                     logs.append(player.move("down", maze))
             elif action == '\x1b[C':
-                if player.jump_mode:
-                    logs.append(player.move("jright", maze))
-                    player.jump_mode = False
-                else:
                     logs.append(player.move("right", maze))
             elif action == '\x1b[D':
-                if player.jump_mode:
-                    logs.append(player.move("jleft", maze))
-                    player.jump_mode = False
-                else:
                     logs.append(player.move("left", maze))
             elif action in ['.']:
                 pass
